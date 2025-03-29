@@ -4,9 +4,14 @@
 #include "../src/BinarySearchNode.cpp"
 #include <string>
 
+struct CharData {
+	int freq;
+	char data;
+};
 
 class BinarySearchTree {
 	BinarySearchNode* m_root;
+	int m_count;
 
 	public:
 	BinarySearchTree();
@@ -17,8 +22,8 @@ class BinarySearchTree {
 	void insert(char);
 	void insertHelper(BinarySearchNode*, char);
 
-	void inorder();
-	void inorderHelper(BinarySearchNode*);
+	CharData* inorder();
+	void printInorder();
 };
 
 #endif
