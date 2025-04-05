@@ -1,8 +1,7 @@
 #ifndef BINARY_SEARCH_TREE_H
 #define BINARY_SEARCH_TREE_H
 
-#include "../src/BinarySearchNode.cpp"
-#include <string>
+#include "../src/Node.cpp"
 
 struct CharData {
 	int freq;
@@ -10,17 +9,19 @@ struct CharData {
 };
 
 class BinarySearchTree {
-	BinarySearchNode* m_root;
+	Node* m_root;
 	int m_count;
 
 	public:
 	BinarySearchTree();
 	~BinarySearchTree();
-	BinarySearchNode* getRoot();
+	Node* getRoot();
+	int getCount();
+	int getCount(Node*);
 
-	void clearTree(BinarySearchNode*);
+	void clearTree(Node*);
 	void insert(char);
-	void insertHelper(BinarySearchNode*, char);
+	void insertHelper(Node*, char);
 
 	CharData* inorder();
 	void printInorder();

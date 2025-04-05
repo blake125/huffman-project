@@ -9,11 +9,23 @@ BinarySearchTree::~BinarySearchTree() {
 	clearTree(m_root);
 }
 
-BinarySearchNode* BinarySearchTree::getRoot() {
+Node* BinarySearchTree::getRoot() {
 	return m_root;
 }
 
-void BinarySearchTree::clearTree(BinarySearchNode* subroot) {
+int BinarySearchTree::getCount() {
+	return getCount(m_root);	
+}
+
+int BinarySearchTree::getCount(Node* subroot) {
+	if(subroot == nullptr) {
+		return 0;
+	}
+
+	return getCount(subroot->getLeft()) + getCount(subroot->getRight()) + 1;
+}
+
+void BinarySearchTree::clearTree(Node* subroot) {
 	if(subroot == nullptr) {
 		return;
 	}
@@ -26,14 +38,14 @@ void BinarySearchTree::clearTree(BinarySearchNode* subroot) {
 
 void BinarySearchTree::insert(char data) {
 	if(m_root == nullptr) {
-		m_root = new BinarySearchNode(1, data);
+		m_root = new Node(1, data);
 		m_count++;
 	} else {
 		insertHelper(m_root, data);
 	}
 }
 
-void BinarySearchTree::insertHelper(BinarySearchNode* subroot, char data) {	
+void BinarySearchTree::insertHelper(Node* subroot, char data) {	
 	char rootData = subroot->getData();
 
 	if(rootData == data) {
@@ -43,14 +55,14 @@ void BinarySearchTree::insertHelper(BinarySearchNode* subroot, char data) {
 
 	if(data < rootData) {
 		if(subroot->getLeft() == nullptr) {
-			subroot->setLeft(new BinarySearchNode(1, data));
+			subroot->setLeft(new Node(1, data));
 			m_count++;
 		} else {
 			insertHelper(subroot->getLeft(), data);
 		}
 	} else {
 		if(subroot->getRight() == nullptr) {
-			subroot->setRight(new BinarySearchNode(1, data));
+			subroot->setRight(new Node(1, data));
 			m_count++;
 		} else {
 			insertHelper(subroot->getRight(), data);
@@ -62,7 +74,7 @@ CharData* BinarySearchTree::inorder() {
 	CharData* charData = new CharData[m_count];	
 	int index = 0;
 	
-	BinarySearchNode* current = m_root;
+	Node* current = m_root;
 	while(current != nullptr) {
 		if(current->getLeft() == nullptr) {
 			charData[index].freq = current->getFreq();
@@ -70,7 +82,7 @@ CharData* BinarySearchTree::inorder() {
 			index++;
 			current = current->getRight();
 		} else {
-			BinarySearchNode* pre = current->getLeft();
+			Node* pre = current->getLeft();
 
 			while(pre->getRight() != nullptr && pre->getRight() != current) {
 				pre = pre->getRight();
