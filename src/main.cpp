@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <cmath>
+#include <cstdint>
 
 #include "BinarySearchTree.cpp"
 #include "HuffmanTree.cpp"
@@ -8,6 +10,7 @@
 void createFreqTree(std::ifstream&, BinarySearchTree*);
 void quickSort(CharData*, int, int);
 int partition(CharData*, int, int);
+void makeOutfile(std::ifstream&, HuffmanTree*);
 
 int main(int argc, char** argv) {
 	if(argc != 4) {
@@ -34,6 +37,8 @@ int main(int argc, char** argv) {
 	BinarySearchTree* freqTree = new BinarySearchTree();
 		
 	createFreqTree(infile, freqTree);
+	
+	infile.close();
 
 	CharData* charData = freqTree->inorder();	
 
@@ -41,12 +46,15 @@ int main(int argc, char** argv) {
 	
 	HuffmanTree* huffTree = new HuffmanTree(charData, freqTree->getCount());
 
+	infile.open(argv[2]);
+
+	makeOutfile(infile, huffTree);
+
 	delete[] charData;
 	delete huffTree;
 	delete freqTree;
-
+	
 	infile.close();
-	outfile.close();
 
 	return 0;
 }
@@ -66,7 +74,7 @@ void createFreqTree(std::ifstream& infile, BinarySearchTree* tree) {
 
 void quickSort(CharData* arr, int low, int high) {
 	if(low >= high) {
-		return; 
+			return; 
 	}
 
 	int pivot = partition(arr, low, high);
@@ -95,4 +103,59 @@ int partition(CharData* arr, int low, int high) {
 	arr[high] = temp;
 
 	return j;
+}
+
+void makeOutfile(std::ifstream& infile, HuffmanTree* tree) {
+	std::ofstream outfile("outfile.huff");
+	std::vector<int> bitstream;
+	bitstream.reserve(1024);
+
+	char byte;
+
+	while(infile.get(byte)) {
+		std::string newRep = tree->findPath(byte);
+
+		for(int i = 0; i < newRep.size(); i++) {
+			if(newRep.at(i) == '1') {
+				bitstream.push_back(1);
+			} else {
+				bitstream.push_back(0);
+			}
+		}
+
+		if(bitstream.size() >= 8) {
+			std::uint8_t value = 0;
+			for(int i = 0; i < 8; i++) {
+				if(bitstream[i] == 1) {
+					value = value | (std::uint8_t)pow(2, i);
+				}
+			}
+
+			outfile << value;
+
+			bitstream.erase(bitstream.begin(), bitstream.begin() + 8);
+		}
+	}
+
+	if(bitstream.size() != 0) {	
+		int remaining = 8 - bitstream.size();
+
+		for(int j = 0; j < remaining; j++) {
+			bitstream.push_back(0);
+		}
+
+		std::uint8_t value = 0;
+		for(int i = 0; i < 8; i++) {
+			if(bitstream[i] == 1) {
+				value = value | (std::uint8_t)pow(2, i);
+			}
+		}
+
+		outfile << value;
+
+		bitstream.erase(bitstream.begin(), bitstream.begin() + 8);
+
+	}
+
+	outfile.close();
 }

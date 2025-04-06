@@ -10,6 +10,8 @@ To run, use the command
     "./bin/huffman -f [FILENAME/FILEPATH] -[e(encode)/d(decode)]"
 in the root folder as well.
 
-The program will create a frequency tree based on the contents of the file and display it.
+This program will create a huffman tree that it'll use to make a new (compressed) file.
+
+Keep in mind, I'm not keeping track of the tree data yet, so there's no way to decode...
 
 I added the first chapter of Alice in Wonderland into a .txt file to help demonstrate how it works.
