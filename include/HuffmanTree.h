@@ -1,9 +1,9 @@
 #ifndef HUFFMAN_TREE_H
 #define HUFFMAN_TREE_H
 
-#include "Node.h"
 #include <vector>
 #include <string>
+#include "Node.h"
 
 class HuffmanTree {
 	Node* m_root;

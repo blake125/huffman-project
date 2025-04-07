@@ -1,12 +1,8 @@
 #ifndef BINARY_SEARCH_TREE_H
 #define BINARY_SEARCH_TREE_H
 
-#include "../src/Node.cpp"
-
-struct CharData {
-	int freq;
-	char data;
-};
+#include <iostream>
+#include "Node.h"
 
 class BinarySearchTree {
 	Node* m_root;

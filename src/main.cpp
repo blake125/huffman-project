@@ -4,8 +4,8 @@
 #include <cmath>
 #include <cstdint>
 
-#include "BinarySearchTree.cpp"
-#include "HuffmanTree.cpp"
+#include "../include/BinarySearchTree.h"
+#include "../include/HuffmanTree.h"
 
 void createFreqTree(std::ifstream&, BinarySearchTree*);
 void quickSort(CharData*, int, int);
@@ -115,7 +115,7 @@ void makeOutfile(std::ifstream& infile, HuffmanTree* tree) {
 	while(infile.get(byte)) {
 		std::string newRep = tree->findPath(byte);
 
-		for(int i = 0; i < newRep.size(); i++) {
+		for(int i = 0; i < (int)newRep.size(); i++) {
 			if(newRep.at(i) == '1') {
 				bitstream.push_back(1);
 			} else {

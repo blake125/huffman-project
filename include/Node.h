@@ -1,6 +1,11 @@
 #ifndef NODE_H
 #define NODE_H
 
+struct CharData {
+	int freq;
+	char data;
+};
+
 class Node;
 
 class Node {

@@ -7,10 +7,10 @@ Usage/build instructions:
 
 After cloning the repo, use the command "make" in the root folder.
 To run, use the command
-    "./bin/huffman -f [FILENAME/FILEPATH] -[e(encode)/d(decode)]"
+    "./bin/huffman.exe -f [FILENAME/FILEPATH] -[e(encode)/d(decode)]"
 in the root folder as well.
 
-This program will create a huffman tree that it'll use to make a new (compressed) file.
+This program will create a huffman tree that it'll use to make a new (compressed) file in the root directory.
 
 Keep in mind, I'm not keeping track of the tree data yet, so there's no way to decode...
 
