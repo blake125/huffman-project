@@ -73,7 +73,7 @@ bool HuffmanTree::getPath(Node* subroot, std::vector<char>& path, char target, c
 	if(getPath(subroot->getLeft(), path, target, '0') 
 			|| getPath(subroot->getRight(), path, target, '1')) {
 				return true;
-			}
+	}
 
 	path.pop_back();
 	return false;

@@ -1,4 +1,4 @@
-OBJS=bin/objs/Node.o bin/objs/HuffmanTree.o bin/objs/BinarySearchTree.o
+OBJS=bin/objs/Node.o bin/objs/HuffmanTree.o bin/objs/BinarySearchTree.o bin/objs/HuffFileMaker.o
 
 CC=g++
 
@@ -11,6 +11,9 @@ LFLAGS=-Wall ${DEBUG}
 huffman.exe: ${OBJS} 
 	${CC} ${LFLAGS} ${OBJS} ./src/main.cpp -o ./bin/huffman.exe
 
+bin/objs/HuffFileMaker.o: include/HuffFileMaker.h src/HuffFileMaker.cpp include/HuffmanTree.h src/HuffmanTree.cpp include/BinarySearchTree.h src/BinarySearchTree.cpp
+	${CC} ${CFLAGS} src/HuffFileMaker.cpp -o bin/objs/HuffFileMaker.o
+
 bin/objs/HuffmanTree.o: include/HuffmanTree.h src/HuffmanTree.cpp include/Node.h src/Node.cpp
 	${CC} ${CFLAGS} src/HuffmanTree.cpp -o bin/objs/HuffmanTree.o
 
@@ -21,5 +24,10 @@ bin/objs/Node.o: include/Node.h src/Node.cpp
 	${CC} ${CFLAGS} src/Node.cpp -o bin/objs/Node.o
 
 clean:
-	rm bin/huffman.exe bin/obs/*.0
+	rm bin/huffman.exe bin/objs/*.o *.huff 
 
+remake:
+	make clean; make
+
+run:
+	make remake; ./bin/huffman.exe -f alice_in_wonderland.txt -e
