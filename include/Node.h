@@ -1,8 +1,10 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <cstdint>
+
 struct CharData {
-	int freq;
+	std::uint32_t freq;
 	char data;
 };
 

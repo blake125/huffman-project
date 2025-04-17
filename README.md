@@ -13,5 +13,6 @@ in the root folder as well.
 This program will create a huffman tree that it'll use to make a new (compressed) file in the root directory.
 
 Keep in mind, I'm not keeping track of the tree data yet, so there's no way to decode...
+But file headers and decoding options are on the way!
 
-I added the first chapter of Alice in Wonderland into a .txt file to help demonstrate how it works.
+For a more simple test, I added a "make test" that will encode this very markdown file.

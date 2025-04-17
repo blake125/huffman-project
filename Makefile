@@ -29,5 +29,5 @@ clean:
 remake:
 	make clean; make
 
-run:
-	make remake; ./bin/huffman.exe -f alice_in_wonderland.txt -e
+test:
+	make remake; ./bin/huffman.exe -f README.md -e;

@@ -17,12 +17,12 @@ void makeEncodedFile(const char* fileName) {
 	quickSort(charData, 0, freqTree->getCount() - 1);
 	
 	HuffmanTree* huffTree = new HuffmanTree(charData, freqTree->getCount());
-
+	
 	std::string fileStr = fileName;
-	fileStr= fileStr.substr(0, fileStr.find("."));
 	
 	infile.clear();
 	infile.seekg(0, std::ios::beg);
+
 	encodeFile(fileStr, infile, huffTree);
 
 	infile.close();
@@ -31,8 +31,58 @@ void makeEncodedFile(const char* fileName) {
 	delete freqTree;
 }
 
-void makeDecodedFile(const char* fileName) {
+void encodeFile(std::string fileName, std::ifstream& infile, HuffmanTree* tree) {
+	std::ofstream outfile(fileName + ".huff");
 
+	std::vector<int> bitstream;
+	bitstream.reserve(1024);
+
+	char byte;
+
+	while(infile.get(byte)) {
+		std::string newRep = tree->findPath(byte);
+
+		for(int i = 0; i < (int)newRep.size(); i++) {
+			if(newRep.at(i) == '1') {
+				bitstream.push_back(1);
+			} else {
+				bitstream.push_back(0);
+			}
+		}
+
+		if(bitstream.size() >= 8) {
+			std::uint8_t value = 0;
+			for(int i = 0; i < 8; i++) {
+				if(bitstream.at(i) == 1) {
+					value = value | (1 << (7 - i));
+				}
+			}
+
+			outfile.put(value);
+
+			bitstream.erase(bitstream.begin(), bitstream.begin() + 8);
+		}
+	}
+
+	if(bitstream.size() != 0) {	
+		int remaining = 8 - bitstream.size();
+
+		for(int j = 0; j < remaining; j++) {
+			bitstream.push_back(0);
+		}
+
+		std::uint8_t value = 0;
+		for(int i = 0; i < 8; i++) {
+			if(bitstream.at(i) == 1) {
+				value = value | (1 << (7 - i));
+			}
+		}
+
+		outfile.put(value);
+
+	}
+
+	outfile.close();
 }
 
 void createFreqTree(std::ifstream& infile, BinarySearchTree* tree) {
@@ -81,61 +131,8 @@ int partition(CharData* arr, int low, int high) {
 	return j;
 }
 
-void makeFileHeader(std::ofstream& outfile, HuffmanTree* tree) {
-	
-}
-
-void encodeFile(std::string fileName, std::ifstream& infile, HuffmanTree* tree) {
-	std::ofstream outfile(fileName + ".huff");
-	std::vector<int> bitstream;
-	bitstream.reserve(1024);
-
-	char byte;
-
-	while(infile.get(byte)) {
-		std::string newRep = tree->findPath(byte);
-
-		for(int i = 0; i < (int)newRep.size(); i++) {
-			if(newRep.at(i) == '1') {
-				bitstream.push_back(1);
-			} else {
-				bitstream.push_back(0);
-			}
-		}
-
-		if(bitstream.size() >= 8) {
-			std::uint8_t value = 0;
-			for(int i = 0; i < 8; i++) {
-				if(bitstream[i] == 1) {
-					value = value | (std::uint8_t)pow(2, 7 - i);
-				}
-			}
-
-			outfile << value;
-
-			bitstream.erase(bitstream.begin(), bitstream.begin() + 8);
-		}
-	}
-
-	if(bitstream.size() != 0) {	
-		int remaining = 8 - bitstream.size();
-
-		for(int j = 0; j < remaining; j++) {
-			bitstream.push_back(0);
-		}
-
-		std::uint8_t value = 0;
-		for(int i = 0; i < 8; i++) {
-			if(bitstream[i] == 1) {
-				value = value | (std::uint8_t)pow(2, 7 - i);
-			}
-		}
-
-		outfile << value;
-
-		bitstream.erase(bitstream.begin(), bitstream.begin() + 8);
-
-	}
-
-	outfile.close();
-}
+/* IN PROGRESS
+void makeDecodedFile(const char* fileName) {}
+void makeFileHeader(std::ofstream& outfile, HuffmanTree* tree) {}
+void decodeFile(std::ifstream& infile, HuffmanTree* tree, std::string fileName) {}
+*/

@@ -1,6 +1,8 @@
 #include "../include/HuffmanTree.h"
 
 HuffmanTree::HuffmanTree(CharData* data, int size) {
+	m_count = (std::uint8_t)size;
+
 	std::vector<Node*> list;
 
 	for(int i = 0; i < size; i++) {
@@ -25,6 +27,7 @@ HuffmanTree::HuffmanTree(CharData* data, int size) {
 	}
 
 	m_root = list.at(0);
+
 }
 
 HuffmanTree::~HuffmanTree() {
@@ -46,13 +49,15 @@ std::string HuffmanTree::findPath(char data) {
 	std::vector<char> path;
 	std::string pathStr;
 
-	getPath(m_root, path, data, -1);
-
-	for(int i = 0; i < (int)path.size(); i++) {
-		pathStr += path[i];
+	if(!getPath(m_root, path, data, -1)) {
+		return "0";		
+	} else {
+		for(int i = 0; i < (int)path.size(); i++) {
+			pathStr += path[i];
+		}
+		
+		return pathStr;
 	}
-
-	return pathStr;
 }
 
 bool HuffmanTree::getPath(Node* subroot, std::vector<char>& path, char target, char dir) {

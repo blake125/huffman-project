@@ -20,6 +20,6 @@ int main(int argc, char** argv) {
 	if(strcmp(argv[3], "-e") == 0) {
 		makeEncodedFile(argv[2]);
 	}
-
+	
 	return 0;
 }
