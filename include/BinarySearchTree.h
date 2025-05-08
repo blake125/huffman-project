@@ -7,7 +7,7 @@
 
 class BinarySearchTree {
 	Node* m_root;
-	int m_count;
+	std::uint32_t m_count;
 
 	public:
 	BinarySearchTree();
@@ -21,6 +21,7 @@ class BinarySearchTree {
 	void insertHelper(Node*, char);
 
 	CharData* inorder();
+	void fillInorder(Node* subroot, CharData* array, int& index);
 	void printInorder();
 };
 

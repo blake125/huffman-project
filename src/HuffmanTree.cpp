@@ -50,7 +50,8 @@ std::string HuffmanTree::findPath(char data) {
 	std::string pathStr;
 
 	if(!getPath(m_root, path, data, -1)) {
-		return "0";		
+		std::cout << "Couldn't find " << data << std::endl;
+		return "0";
 	} else {
 		for(int i = 0; i < (int)path.size(); i++) {
 			pathStr += path[i];
@@ -82,4 +83,8 @@ bool HuffmanTree::getPath(Node* subroot, std::vector<char>& path, char target, c
 
 	path.pop_back();
 	return false;
+}
+
+Node* HuffmanTree::getRoot() {
+	return m_root;
 }

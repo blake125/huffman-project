@@ -40,9 +40,10 @@ void BinarySearchTree::insert(char data) {
 	if(m_root == nullptr) {
 		m_root = new Node(1, data);
 		m_count++;
-	} else {
-		insertHelper(m_root, data);
-	}
+		return;
+	} 
+
+	insertHelper(m_root, data);		
 }
 
 void BinarySearchTree::insertHelper(Node* subroot, char data) {	
@@ -70,39 +71,22 @@ void BinarySearchTree::insertHelper(Node* subroot, char data) {
 	}
 }
 
+
 CharData* BinarySearchTree::inorder() {
-	CharData* charData = new CharData[m_count];	
+	CharData* charData = new CharData[m_count];
 	int index = 0;
-	
-	Node* current = m_root;
-	while(current != nullptr) {
-		if(current->getLeft() == nullptr) {
-			charData[index].freq = current->getFreq();
-			charData[index].data = current->getData();
-			index++;
-			current = current->getRight();
-		} else {
-			Node* pre = current->getLeft();
-
-			while(pre->getRight() != nullptr && pre->getRight() != current) {
-				pre = pre->getRight();
-			}
-
-			if(pre->getRight() == nullptr) {
-				pre->setRight(current);
-				current = current->getLeft();
-			} else {
-				pre->setRight(nullptr);
-				charData[index].freq = current->getFreq();
-				charData[index].data = current->getData();
-				index++;
-
-				current = current->getRight();
-			}
-		}
-	}
-
+	fillInorder(m_root, charData, index);
 	return charData;
+}
+
+void BinarySearchTree::fillInorder(Node* subroot, CharData* array, int& index) {
+	if (subroot == nullptr) return;
+
+	fillInorder(subroot->getLeft(), array, index);
+	array[index].freq = subroot->getFreq();
+    	array[index].data = subroot->getData();
+    	index++;
+    	fillInorder(subroot->getRight(), array, index);
 }
 
 void BinarySearchTree::printInorder() {

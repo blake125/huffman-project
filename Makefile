@@ -1,4 +1,4 @@
-OBJS=bin/objs/Node.o bin/objs/HuffmanTree.o bin/objs/BinarySearchTree.o bin/objs/HuffFileMaker.o
+OBJS=bin/objs/HuffmanTree.o bin/objs/BinarySearchTree.o bin/objs/HuffFileMaker.o
 
 CC=g++
 
@@ -14,14 +14,11 @@ huffman.exe: ${OBJS}
 bin/objs/HuffFileMaker.o: include/HuffFileMaker.h src/HuffFileMaker.cpp include/HuffmanTree.h src/HuffmanTree.cpp include/BinarySearchTree.h src/BinarySearchTree.cpp
 	${CC} ${CFLAGS} src/HuffFileMaker.cpp -o bin/objs/HuffFileMaker.o
 
-bin/objs/HuffmanTree.o: include/HuffmanTree.h src/HuffmanTree.cpp include/Node.h src/Node.cpp
+bin/objs/HuffmanTree.o: include/HuffmanTree.h src/HuffmanTree.cpp include/Node.h
 	${CC} ${CFLAGS} src/HuffmanTree.cpp -o bin/objs/HuffmanTree.o
 
-bin/objs/BinarySearchTree.o: include/BinarySearchTree.h src/BinarySearchTree.cpp include/Node.h src/Node.cpp
+bin/objs/BinarySearchTree.o: include/BinarySearchTree.h src/BinarySearchTree.cpp include/Node.h 
 	${CC} ${CFLAGS} src/BinarySearchTree.cpp -o bin/objs/BinarySearchTree.o
-
-bin/objs/Node.o: include/Node.h src/Node.cpp
-	${CC} ${CFLAGS} src/Node.cpp -o bin/objs/Node.o
 
 clean:
 	rm bin/huffman.exe bin/objs/*.o *.huff 
@@ -30,4 +27,4 @@ remake:
 	make clean; make
 
 test:
-	make remake; ./bin/huffman.exe -f README.md -e;
+	make remake; ./bin/huffman.exe -f README.md -e; ./bin/huffman.exe -f README.md.huff -d

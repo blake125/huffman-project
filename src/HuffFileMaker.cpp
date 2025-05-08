@@ -1,7 +1,7 @@
 #include "../include/HuffFileMaker.h"
 
 void makeEncodedFile(const char* fileName) {
-	std::ifstream infile(fileName);
+	std::ifstream infile(fileName, std::ios::binary);
 
 	if(!infile.is_open()) {
 		std::cout << "File doesn't exist!\n";
@@ -22,18 +22,19 @@ void makeEncodedFile(const char* fileName) {
 	
 	infile.clear();
 	infile.seekg(0, std::ios::beg);
-
-	encodeFile(fileStr, infile, huffTree);
+	
+	std::ofstream outfile(fileStr + ".huff", std::ios::binary);
+	makeFileHeader(outfile, freqTree);
+	encodeFile(infile, huffTree, outfile);
 
 	infile.close();
+	outfile.close();
 	delete[] charData;
 	delete huffTree;
 	delete freqTree;
 }
 
-void encodeFile(std::string fileName, std::ifstream& infile, HuffmanTree* tree) {
-	std::ofstream outfile(fileName + ".huff");
-
+void encodeFile(std::ifstream& infile, HuffmanTree* tree, std::ofstream& outfile) {
 	std::vector<int> bitstream;
 	bitstream.reserve(1024);
 
@@ -82,19 +83,12 @@ void encodeFile(std::string fileName, std::ifstream& infile, HuffmanTree* tree) 
 
 	}
 
-	outfile.close();
 }
 
 void createFreqTree(std::ifstream& infile, BinarySearchTree* tree) {
-	char buffer[2048];
-
-	while(infile.getline(buffer, 2048)) {
-		for(int i = 0; i < 2048; i++) {
-			if(buffer[i] == '\0') {
-				break;
-			}
-			tree->insert(buffer[i]);
-		}
+	char byte;
+	while(infile.get(byte)) {
+		tree->insert(byte);
 	}
 }
 
@@ -131,8 +125,90 @@ int partition(CharData* arr, int low, int high) {
 	return j;
 }
 
-/* IN PROGRESS
-void makeDecodedFile(const char* fileName) {}
-void makeFileHeader(std::ofstream& outfile, HuffmanTree* tree) {}
-void decodeFile(std::ifstream& infile, HuffmanTree* tree, std::string fileName) {}
-*/
+void makeDecodedFile(const char* fileName) {
+	std::ifstream infile(fileName, std::ios::binary);
+	if(!infile.is_open()) {
+		std::cout << "File doesn't exist!" << std::endl;
+		return;
+	}
+	
+	char magicNumber[5];
+	infile.read(magicNumber, 4);
+
+	if(strcmp(magicNumber, "HUFF") != 0) {
+		std::cout << "Not a compressed file!" << std::endl;
+		return;
+	}
+	
+	BinarySearchTree* freqTree = new BinarySearchTree();
+
+	std::uint32_t data[256] = {0};
+	infile.read(reinterpret_cast<char*>(data), sizeof(data));
+	
+	std::vector<struct CharData> charDataV;
+	for(int i = 0; i < 256; i++) {
+		if(data[i] != 0) {
+			charDataV.push_back({data[i], (char)i});	
+		}
+	}
+
+	CharData charData[(int)charDataV.size()];
+	for(int i = 0; i < (int)charDataV.size(); i++) {
+		charData[i] = charDataV.at(i);	
+	}
+
+	quickSort(charData, 0, charDataV.size() - 1);
+	HuffmanTree* huffTree = new HuffmanTree(charData, charDataV.size());
+	
+	std::string decodedFileStr = fileName;
+	decodedFileStr = decodedFileStr.substr(0, decodedFileStr.size() - 5);
+	decodedFileStr += ".test";
+
+	std::ofstream outfile(decodedFileStr, std::ios::binary);
+	decodeFile(infile, huffTree, outfile);
+
+	infile.close();
+	outfile.close();
+	delete freqTree;
+	delete huffTree;
+}
+
+void makeFileHeader(std::ofstream& outfile, BinarySearchTree* tree) {
+	outfile.write("HUFF", 4);
+	
+	std::uint32_t frequencies[256];
+	for(int i = 0; i < 256; i++) {
+		frequencies[i] = 0;
+	}
+
+	CharData* data = tree->inorder();
+	for(int j = 0; j < tree->getCount(); j++) {
+		frequencies[static_cast<std::uint8_t>(data[j].data)] = data[j].freq;
+	}
+
+	outfile.write(reinterpret_cast<const char*>(frequencies), sizeof(frequencies));
+
+	delete[] data;
+}
+
+void decodeFile(std::ifstream& infile, HuffmanTree* tree, std::ofstream& outfile) {
+	char byte;
+	Node* walk = tree->getRoot();
+	
+	while(infile.get(byte)) {
+		for(int i = 0; i < 8; i++) {
+		    	int bit = (byte & (1 << (7 - i))) != 0 ? 1 : 0;
+		    
+			if(bit == 0) {
+				walk = walk->getLeft(); 
+		    	} else { 
+				walk = walk->getRight();
+		    	}
+		    
+			if(walk->getLeft() == nullptr && walk->getRight() == nullptr) {
+				outfile.put(walk->getData());
+				walk = tree->getRoot();
+		    	}
+		}
+    	}
+}

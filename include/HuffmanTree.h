@@ -22,6 +22,7 @@ class HuffmanTree {
 	~HuffmanTree();
 
 	std::string findPath(char);
+	Node* getRoot();
 };
 
 #endif
