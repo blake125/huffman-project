@@ -1,19 +1,21 @@
 # huffman-project
 My implementation of a Huffman encoder/decoder in C++.
 
-As of right now, it can only encode/decode one byte UTF-8 characters.
-Full UTF-8 functionality coming soon!
+Currently, the encoder only supports one byte UTF-8 characters.
 
-Usage/build instructions:
+Since the frequency tables are developed locally, smaller files
+actually end up getting expanded rather than decoded.
 
-After cloning the repo, use the command "make" in the root folder.
-To run, use the command
-    "./bin/huffman.exe -f [FILENAME/FILEPATH] -[e(encode)/d(decode)]"
-in the root folder as well.
+To clone, use the command
+    "git clone "https://github.com/blake125/huffman-project""
 
-This program will create a huffman tree that it'll use to make a new (compressed) file in the root directory.
+Here is the usage of the program:
+    "./bin/huffman -f [FILENAME] [-e(ncode) || -d(ecode)]"
 
-Since the frequency analysis is local to the file, it requires a (rather large) header to aid in the decoding process.
+I've included a "make test" shortcut that will encode and decode
+this README. However, since the file size is so small, the encoder
+doesn't actually get to show off.
 
-For a more simple test, I added a "make test" that will encode this very markdown file.
-Because of the file header, this small example doesn't show off the actual capabilities of the compressor. 
+Features in development:
+    -Full UTF-8 encoding (multibyte)
+    -Global frequency analysis option (improves smaller file compression)

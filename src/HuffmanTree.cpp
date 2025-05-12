@@ -1,16 +1,14 @@
 #include "../include/HuffmanTree.h"
 
-HuffmanTree::HuffmanTree(CharData* data, int size) {
-	m_count = (std::uint8_t)size;
-
+HuffmanTree::HuffmanTree(std::vector<Data> data) {
 	std::vector<Node*> list;
 
-	for(int i = 0; i < size; i++) {
-		list.push_back(new Node(data[i].freq, data[i].data));
+	for(int i = 0; i < (int)data.size(); i++) {
+		list.push_back(new Node(data.at(i).freq, data.at(i).symbol));
 	}
 
 	while((int)list.size() != 1) {
-		Node* parent = new Node(list.at(0)->getFreq() + list.at(1)->getFreq(), '0');
+		Node* parent = new Node(list.at(0)->getData().freq + list.at(1)->getData().freq, '0');
 		parent->setLeft(list.at(0));
 		parent->setRight(list.at(1));
 
@@ -18,7 +16,7 @@ HuffmanTree::HuffmanTree(CharData* data, int size) {
 
 		int index = 0;
 		while(index != (int)list.size() 
-				&& list.at(index)->getFreq() < parent->getFreq()) {
+				&& list.at(index)->getData().freq < parent->getData().freq) {
 			index++;
 		}
 
@@ -70,7 +68,7 @@ bool HuffmanTree::getPath(Node* subroot, std::vector<char>& path, char target, c
 		path.push_back(dir);
 	}
 
-	if(subroot->getData() == target 
+	if(subroot->getData().symbol == target 
 			&& subroot->getLeft() == nullptr 
 			&& subroot->getRight() == nullptr) {
 		return true;

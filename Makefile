@@ -8,8 +8,8 @@ CFLAGS=-Wall -c ${DEBUG}
 
 LFLAGS=-Wall ${DEBUG}
 
-huffman.exe: ${OBJS} 
-	${CC} ${LFLAGS} ${OBJS} ./src/main.cpp -o ./bin/huffman.exe
+huffman: ${OBJS} 
+	${CC} ${LFLAGS} ${OBJS} ./src/main.cpp -o ./bin/huffman
 
 bin/objs/HuffFileMaker.o: include/HuffFileMaker.h src/HuffFileMaker.cpp include/HuffmanTree.h src/HuffmanTree.cpp include/BinarySearchTree.h src/BinarySearchTree.cpp
 	${CC} ${CFLAGS} src/HuffFileMaker.cpp -o bin/objs/HuffFileMaker.o
@@ -21,10 +21,10 @@ bin/objs/BinarySearchTree.o: include/BinarySearchTree.h src/BinarySearchTree.cpp
 	${CC} ${CFLAGS} src/BinarySearchTree.cpp -o bin/objs/BinarySearchTree.o
 
 clean:
-	rm bin/huffman.exe bin/objs/*.o *.huff 
+	rm bin/huffman bin/objs/*.o *.huff *.test 
 
 remake:
 	make clean; make
 
 test:
-	make remake; ./bin/huffman.exe -f README.md -e; ./bin/huffman.exe -f README.md.huff -d
+	make remake; ./bin/huffman -f README.md -e; ./bin/huffman -f README.md.huff -d

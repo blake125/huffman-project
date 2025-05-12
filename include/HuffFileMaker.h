@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <cstring>
+#include <algorithm>
 
 #include "BinarySearchTree.h"
 #include "HuffmanTree.h"
@@ -12,8 +13,6 @@ void makeEncodedFile(const char*);
 void encodeFile(std::ifstream&, HuffmanTree*, std::ofstream&);
 
 void createFreqTree(std::ifstream&, BinarySearchTree*);
-void quickSort(CharData*, int, int);
-int partition(CharData*, int, int);
 
 void makeDecodedFile(const char*);
 void makeFileHeader(std::ofstream&, BinarySearchTree*);

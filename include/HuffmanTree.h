@@ -18,7 +18,7 @@ class HuffmanTree {
 	bool getPath(Node*, std::vector<char>&, char, char);
 	
 	public:
-	HuffmanTree(CharData*, int);
+	HuffmanTree(std::vector<struct Data>);
 	~HuffmanTree();
 
 	std::string findPath(char);

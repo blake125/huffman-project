@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Node.h"
+#include <vector>
 
 class BinarySearchTree {
 	Node* m_root;
@@ -20,8 +21,8 @@ class BinarySearchTree {
 	void insert(char);
 	void insertHelper(Node*, char);
 
-	CharData* inorder();
-	void fillInorder(Node* subroot, CharData* array, int& index);
+	std::vector<struct Data> inorder();
+	void fillInorder(Node*, std::vector<struct Data>&);
 	void printInorder();
 };
 

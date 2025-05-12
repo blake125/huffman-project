@@ -47,7 +47,7 @@ void BinarySearchTree::insert(char data) {
 }
 
 void BinarySearchTree::insertHelper(Node* subroot, char data) {	
-	char rootData = subroot->getData();
+	char rootData = subroot->getData().symbol;
 
 	if(rootData == data) {
 		subroot->incrementFreq();
@@ -72,33 +72,30 @@ void BinarySearchTree::insertHelper(Node* subroot, char data) {
 }
 
 
-CharData* BinarySearchTree::inorder() {
-	CharData* charData = new CharData[m_count];
-	int index = 0;
-	fillInorder(m_root, charData, index);
-	return charData;
+std::vector<struct Data> BinarySearchTree::inorder() {
+	std::vector<struct Data> data;
+
+	fillInorder(m_root, data);
+
+	return data;
 }
 
-void BinarySearchTree::fillInorder(Node* subroot, CharData* array, int& index) {
+void BinarySearchTree::fillInorder(Node* subroot, std::vector<struct Data> &data) {
 	if (subroot == nullptr) return;
 
-	fillInorder(subroot->getLeft(), array, index);
-	array[index].freq = subroot->getFreq();
-    	array[index].data = subroot->getData();
-    	index++;
-    	fillInorder(subroot->getRight(), array, index);
+	fillInorder(subroot->getLeft(), data);
+	data.push_back(subroot->getData());
+	fillInorder(subroot->getRight(), data);
 }
 
 void BinarySearchTree::printInorder() {
-	CharData* charData = inorder();
+	std::vector<struct Data> data = inorder();
 
-	for(int i = 0; i < m_count - 1; i++) {
-		std::cout << '[' << charData[i].data << ':' << charData[i].freq << "]->";
+	for(int i = 0; i < (int)data.size() - 1; i++) {
+		std::cout << '[' << data.at(i).symbol << ':' << data.at(i).freq << "]->";
 	}
 
-	std::cout << '[' << charData[m_count - 1].data << ':' << charData[m_count - 1].freq << ']';
+	std::cout << '[' << data.back().symbol << ':' << data.back().freq << ']';
 
 	std::cout << '\n';
-
-	delete[] charData;
 }
