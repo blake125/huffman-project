@@ -6,6 +6,7 @@
 #include <stack>
 #include <iostream>
 #include <sstream>
+#include <queue>
 
 #include "Node.h"
 

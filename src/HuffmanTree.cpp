@@ -22,6 +22,10 @@ HuffmanTree::HuffmanTree(std::vector<Data> data) {
 
 		list.insert(list.begin() + index, parent);
 		
+		//weird bug: adding 't' to the end
+		/*auto pos = std::lower_bound(list.begin(), list.end(), parent);
+		list.insert(pos, parent);*/
+		
 	}
 
 	m_root = list.at(0);

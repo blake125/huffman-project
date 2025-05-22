@@ -7,9 +7,10 @@ struct Data {
 	std::uint32_t freq;
 	char symbol;
 
-	bool operator<(Data& data) const { return freq < data.freq; }
 	Data() : freq(0), symbol('0') {}
 	Data(std::uint32_t frequency, char character) : freq(frequency), symbol(character) {}
+	bool operator<(const Data& data) const { return freq < data.freq; }
+	bool operator>(const Data& data) const { return freq > data.freq; }
 };
 
 class Node {
@@ -19,8 +20,9 @@ class Node {
 	struct Data m_data;
 
 	public:
-
 	inline Node() : m_left(nullptr), m_right(nullptr), m_data() {}
+
+	inline Node(Data data) : m_left(nullptr), m_right(nullptr), m_data(data) {}
 
 	inline Node(std::uint32_t freq, char data) {
 		m_data.freq = freq; 
@@ -37,6 +39,11 @@ class Node {
 	inline void setLeft(Node* node){ m_left = node; }
 	inline void setRight(Node* node){ m_right = node; }
 	inline void incrementFreq(){ m_data.freq++; }
+};
+
+class CompareNodePtrs {
+	public:
+	inline bool operator()(Node* node1, Node* node2) { return node1->getData().freq < node2->getData().freq; }
 };
 
 #endif

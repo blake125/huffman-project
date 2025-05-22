@@ -138,10 +138,7 @@ void makeDecodedFile(const char* fileName) {
 void makeFileHeader(std::ofstream& outfile, BinarySearchTree* tree) {
 	outfile.write("HUFF", 4);
 	
-	std::uint32_t frequencies[256];
-	for(int i = 0; i < 256; i++) {
-		frequencies[i] = 0;
-	}
+	std::uint32_t frequencies[256] = {0};
 
 	std::vector<struct Data> data = tree->inorder();
 	for(int j = 0; j < tree->getCount(); j++) {
