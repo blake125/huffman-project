@@ -1,3 +1,5 @@
+DIRS=bin/ bin/objs
+
 OBJS=bin/objs/HuffmanTree.o bin/objs/BinarySearchTree.o bin/objs/HuffFileMaker.o
 
 CC=g++
@@ -7,6 +9,8 @@ DEBUG=-Wextra -g3 -Og -fno-optimize-sibling-calls -fno-ipa-icf -fno-omit-frame-p
 CFLAGS=-Wall -c ${DEBUG} 
 
 LFLAGS=-Wall ${DEBUG}
+
+$(shell mkdir -p $(DIRS))
 
 huffman: ${OBJS} 
 	${CC} ${LFLAGS} ${OBJS} ./src/main.cpp -o ./bin/huffman
