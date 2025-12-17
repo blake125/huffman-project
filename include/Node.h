@@ -5,10 +5,10 @@
 
 struct Data {
 	std::uint32_t freq;
-	char symbol;
+	std::uint8_t symbol;
 
 	Data() : freq(0), symbol('0') {}
-	Data(std::uint32_t frequency, char character) : freq(frequency), symbol(character) {}
+	Data(std::uint32_t frequency, std::uint8_t character) : freq(frequency), symbol(character) {}
 	bool operator<(const Data& data) const { return freq < data.freq; }
 	bool operator>(const Data& data) const { return freq > data.freq; }
 };
@@ -24,7 +24,7 @@ class Node {
 
 	inline Node(Data data) : m_left(nullptr), m_right(nullptr), m_data(data) {}
 
-	inline Node(std::uint32_t freq, char data) {
+	inline Node(std::uint32_t freq, std::uint8_t data) {
 		m_data.freq = freq; 
 		m_data.symbol = data;
 
@@ -47,4 +47,3 @@ class CompareNodePtrs {
 };
 
 #endif
-

@@ -36,7 +36,7 @@ void BinarySearchTree::clearTree(Node* subroot) {
 	delete subroot;
 }
 
-void BinarySearchTree::insert(char data) {
+void BinarySearchTree::insert(std::uint8_t data) {
 	if(m_root == nullptr) {
 		m_root = new Node(1, data);
 		m_count++;
@@ -46,8 +46,8 @@ void BinarySearchTree::insert(char data) {
 	insertHelper(m_root, data);		
 }
 
-void BinarySearchTree::insertHelper(Node* subroot, char data) {	
-	char rootData = subroot->getData().symbol;
+void BinarySearchTree::insertHelper(Node* subroot, std::uint8_t data) {	
+	std::uint8_t rootData = subroot->getData().symbol;
 
 	if(rootData == data) {
 		subroot->incrementFreq();

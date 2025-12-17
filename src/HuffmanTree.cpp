@@ -29,7 +29,21 @@ HuffmanTree::HuffmanTree(std::vector<Data> data) {
 	}
 
 	m_root = list.at(0);
+	populate_map(getRoot());
+}
 
+void HuffmanTree::populate_map(Node* subroot) {
+	if(subroot == nullptr) {
+		return;
+	}
+
+	if(subroot->getLeft() == nullptr && subroot->getRight() == nullptr) {
+		std::uint8_t data = subroot->getData().symbol;
+		symbol_map[data] = findPath(data); 
+	}
+
+	populate_map(subroot->getLeft());
+	populate_map(subroot->getRight());
 }
 
 HuffmanTree::~HuffmanTree() {
@@ -47,13 +61,17 @@ void HuffmanTree::clearTree(Node* subroot) {
 	delete subroot;
 }
 
-std::string HuffmanTree::findPath(char data) {
+std::string HuffmanTree::retrievePath(std::uint8_t data) {
+	return symbol_map[data];
+}
+
+std::string HuffmanTree::findPath(std::uint8_t data) {
 	std::vector<char> path;
 	std::string pathStr;
 
 	if(!getPath(m_root, path, data, -1)) {
 		std::cout << "Couldn't find " << data << std::endl;
-		return "0";
+		return "";
 	} else {
 		for(int i = 0; i < (int)path.size(); i++) {
 			pathStr += path[i];
@@ -63,7 +81,7 @@ std::string HuffmanTree::findPath(char data) {
 	}
 }
 
-bool HuffmanTree::getPath(Node* subroot, std::vector<char>& path, char target, char dir) {
+bool HuffmanTree::getPath(Node* subroot, std::vector<char>& path, std::uint8_t target, char dir) {
 	if(subroot == nullptr) {
 		return false;
 	}
