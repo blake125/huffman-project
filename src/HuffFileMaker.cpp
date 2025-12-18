@@ -40,6 +40,13 @@ void makeEncodedFile(const char* fileName) {
 		outfile.put(byte);	
 	}
 
+	int status = remove((fileStr + ".temp").c_str());
+	if(status != 0) {
+		std::cout << "Error removing the temp file!\n";
+	} else {
+		std::cout << "Temp file successfully deleted.\n";
+	}
+
 	infile.close();
 	outfile.close();
 	writer.close();

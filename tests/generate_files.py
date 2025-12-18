@@ -35,7 +35,13 @@ def get_random_unicode(length):
     ]
     return ''.join(random.choice(alphabet) for i in range(length))
 
-for num in range(1,2):
-    with open("./tests/output/test" + str(num) + ".txt", 'w') as file:
-        content = get_random_unicode(random.randrange(1, 1024))
+def main():
+    with open("./output/utf-8_test.txt", 'w') as file:
+        line_count = random.randrange(1, 1024)
+        content = ""
+        for x in range(1, line_count):
+            content = get_random_unicode(random.randrange(1, 1024))
         file.write(content) 
+
+if __name__ == "__main__":
+    main()

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <cstring>
 #include <algorithm>
+#include <cstdio>
 
 #include "BinarySearchTree.h"
 #include "HuffmanTree.h"

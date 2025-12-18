@@ -29,6 +29,3 @@ clean:
 
 remake:
 	make clean; make
-
-test:
-	make remake; ./bin/huffman -f README.md -e; ./bin/huffman -f README.md.huff -d
