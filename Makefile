@@ -1,19 +1,29 @@
-DIRS=bin/ bin/objs
+SHELL := /bin/bash
 
-OBJS=bin/objs/HuffmanTree.o bin/objs/BinarySearchTree.o bin/objs/HuffFileMaker.o
+DIRS := bin/ bin/objs
 
-CC=g++
+OBJS := bin/objs/HuffmanTree.o bin/objs/BinarySearchTree.o \
+	bin/objs/HuffFileMaker.o bin/objs/main.o
 
-DEBUG=-Wextra -g3 -Og -fno-optimize-sibling-calls -fno-ipa-icf -fno-omit-frame-pointer -fno-common -fsanitize=address -fsanitize=pointer-compare -fsanitize=pointer-subtract -fsanitize=undefined -fsanitize=shift -fsanitize=shift-exponent -fsanitize=shift-base -fsanitize=integer-divide-by-zero -fsanitize=unreachable -fsanitize=vla-bound -fsanitize=null -fsanitize=return -fsanitize=signed-integer-overflow -fsanitize=bounds -fsanitize=bounds-strict -fsanitize=alignment -fsanitize=object-size -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fsanitize=bool -fsanitize=enum -fsanitize=vptr -fsanitize=pointer-overflow -fsanitize=builtin -fno-sanitize-recover=all -fsanitize-address-use-after-scope -fstack-protector-all
+CC := g++
 
-CFLAGS=-Wall -c ${DEBUG} 
+DEBUG := -Wextra -g3 -Og -fno-optimize-sibling-calls -fno-ipa-icf -fno-omit-frame-pointer -fno-common -fsanitize=address -fsanitize=pointer-compare \
+	 -fsanitize=pointer-subtract -fsanitize=undefined -fsanitize=shift -fsanitize=shift-exponent -fsanitize=shift-base -fsanitize=integer-divide-by-zero \
+	 -fsanitize=unreachable -fsanitize=vla-bound -fsanitize=null -fsanitize=return -fsanitize=signed-integer-overflow -fsanitize=bounds -fsanitize=bounds-strict \
+	 -fsanitize=alignment -fsanitize=object-size -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fsanitize=bool -fsanitize=enum -fsanitize=vptr \
+	 -fsanitize=pointer-overflow -fsanitize=builtin -fno-sanitize-recover=all -fsanitize-address-use-after-scope -fstack-protector-all
 
-LFLAGS=-Wall ${DEBUG}
+CFLAGS := -Wall -c ${DEBUG} 
+
+LFLAGS := -Wall ${DEBUG}
 
 $(shell mkdir -p $(DIRS))
 
 huffman: ${OBJS} 
-	${CC} ${LFLAGS} ${OBJS} ./src/main.cpp -o ./bin/huffman
+	${CC} ${LFLAGS} ${OBJS} -o ./bin/huffman
+
+bin/objs/main.o: include/HuffFileMaker.h
+	${CC} ${CFLAGS} src/main.cpp -o bin/objs/main.o
 
 bin/objs/HuffFileMaker.o: include/HuffFileMaker.h src/HuffFileMaker.cpp include/HuffmanTree.h src/HuffmanTree.cpp include/BinarySearchTree.h src/BinarySearchTree.cpp
 	${CC} ${CFLAGS} src/HuffFileMaker.cpp -o bin/objs/HuffFileMaker.o
@@ -25,10 +35,13 @@ bin/objs/BinarySearchTree.o: include/BinarySearchTree.h src/BinarySearchTree.cpp
 	${CC} ${CFLAGS} src/BinarySearchTree.cpp -o bin/objs/BinarySearchTree.o
 
 clean:
-	rm bin/huffman bin/objs/*.o *.huff *.test 
+	-rm bin/huffman bin/objs/*.o *.huff *.test 
 
 remake:
-	make clean; make
+	make clean
+	make
 
 test:
-	make remake; ./bin/huffman -f README.md -e; ./bin/huffman -f README.md.huff -d
+	make remake
+	./bin/huffman -f README.md -e
+	./bin/huffman -f README.md.huff -d
