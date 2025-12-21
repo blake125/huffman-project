@@ -24,24 +24,44 @@ void makeEncodedFile(const char* fileName) {
 	infile.seekg(0, std::ios::beg);
 	
 	std::ofstream outfile(fileStr + ".huff", std::ios::binary);
+	std::uint32_t bc = 0;
+
+	std::ofstream temp(fileStr + ".temp", std::ios::binary);
+	encodeFile(infile, huffTree, temp, bc);
+	temp.close();
+
 	makeFileHeader(outfile, freqTree);
-	encodeFile(infile, huffTree, outfile);
+	outfile.write(reinterpret_cast<const char*>(&bc), sizeof(bc));
+
+	std::ifstream writer(fileStr + ".temp", std::ios::binary);
+
+	char byte;
+	while(writer.get(byte)) {
+		outfile.put(byte);	
+	}
+
+	int status = remove((fileStr + ".temp").c_str());
+	if(status != 0) {
+		std::cout << "Error removing the temp file!\n";
+	} else {
+		std::cout << "Temp file successfully deleted.\n";
+	}
 
 	infile.close();
 	outfile.close();
+	writer.close();
 	delete huffTree;
 	delete freqTree;
 }
 
-void encodeFile(std::ifstream& infile, HuffmanTree* tree, std::ofstream& outfile) {
+void encodeFile(std::ifstream& infile, HuffmanTree* tree, std::ofstream& outfile, std::uint32_t &bc) {
 	std::vector<int> bitstream;
 	bitstream.reserve(1024);
 
 	char byte;
-
 	while(infile.get(byte)) {
-		std::string newRep = tree->findPath(byte);
-
+		std::string newRep = tree->retrievePath(byte);
+		bc += newRep.size();
 		for(int i = 0; i < (int)newRep.size(); i++) {
 			if(newRep.at(i) == '1') {
 				bitstream.push_back(1);
@@ -50,7 +70,7 @@ void encodeFile(std::ifstream& infile, HuffmanTree* tree, std::ofstream& outfile
 			}
 		}
 
-		if(bitstream.size() >= 8) {
+		while(bitstream.size() >= 8) {
 			std::uint8_t value = 0;
 			for(int i = 0; i < 8; i++) {
 				if(bitstream.at(i) == 1) {
@@ -65,7 +85,7 @@ void encodeFile(std::ifstream& infile, HuffmanTree* tree, std::ofstream& outfile
 	}
 
 	if(bitstream.size() != 0) {	
-		int remaining = 8 - bitstream.size();
+		int remaining = (8 - bitstream.size());
 
 		for(int j = 0; j < remaining; j++) {
 			bitstream.push_back(0);
@@ -78,8 +98,8 @@ void encodeFile(std::ifstream& infile, HuffmanTree* tree, std::ofstream& outfile
 			}
 		}
 
+		
 		outfile.put(value);
-
 	}
 
 }
@@ -100,7 +120,6 @@ void makeDecodedFile(const char* fileName) {
 	
 	char magicNumber[5];
 	infile.read(magicNumber, 4);
-
 	if(strcmp(magicNumber, "HUFF") != 0) {
 		std::cout << "Not a compressed file!" << std::endl;
 		return;
@@ -110,6 +129,10 @@ void makeDecodedFile(const char* fileName) {
 
 	std::uint32_t data[256] = {0};
 	infile.read(reinterpret_cast<char*>(data), sizeof(data));
+
+	std::uint32_t bc = 0;
+	infile.read(reinterpret_cast<char*>(&bc), sizeof(bc));
+
 	
 	std::vector<struct Data> dataV;
 	for(int i = 0; i < 256; i++) {
@@ -127,7 +150,7 @@ void makeDecodedFile(const char* fileName) {
 	decodedFileStr += ".test";
 
 	std::ofstream outfile(decodedFileStr, std::ios::binary);
-	decodeFile(infile, huffTree, outfile);
+	decodeFile(infile, huffTree, outfile, bc);
 
 	infile.close();
 	outfile.close();
@@ -148,16 +171,20 @@ void makeFileHeader(std::ofstream& outfile, BinarySearchTree* tree) {
 	outfile.write(reinterpret_cast<const char*>(frequencies), sizeof(frequencies));
 }
 
-void decodeFile(std::ifstream& infile, HuffmanTree* tree, std::ofstream& outfile) {
+void decodeFile(std::ifstream& infile, HuffmanTree* tree, std::ofstream& outfile, std::uint32_t bit_count) {
 	char byte;
 	Node* walk = tree->getRoot();
 	
+	std::uint32_t bc = 0;
 	while(infile.get(byte)) {
 		for(int i = 0; i < 8; i++) {
+			if(bit_count == bc) {
+				return;
+			}
 		    	int bit = (byte & (1 << (7 - i))) != 0 ? 1 : 0;
 		    
 			if(bit == 0) {
-				walk = walk->getLeft(); 
+				walk = walk->getLeft();
 		    	} else { 
 				walk = walk->getRight();
 		    	}
@@ -166,6 +193,9 @@ void decodeFile(std::ifstream& infile, HuffmanTree* tree, std::ofstream& outfile
 				outfile.put(walk->getData().symbol);
 				walk = tree->getRoot();
 		    	}
+
+			bc++;
 		}
+
     	}
 }

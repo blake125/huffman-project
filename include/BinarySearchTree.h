@@ -18,8 +18,8 @@ class BinarySearchTree {
 	int getCount(Node*);
 
 	void clearTree(Node*);
-	void insert(char);
-	void insertHelper(Node*, char);
+	void insert(std::uint8_t);
+	void insertHelper(Node*, std::uint8_t);
 
 	std::vector<struct Data> inorder();
 	void fillInorder(Node*, std::vector<struct Data>&);
