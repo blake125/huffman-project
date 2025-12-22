@@ -3,12 +3,11 @@
 An implementation of the Huffman coding algorithm for file compression in **C++**
 
 ## Features
-- Compression using Huffman coding algorithm  
-- Binary search tree for frequency analysis  
-- Bit-level encoding/decoding with proper padding handling  
-- Works with any file type (text, binary, images, etc.)  
-- Custom `.huff` file format with magic number validation  
-- Multibyte encoding/decoding!
+- File compression and decompression using Huffman coding.
+- All file types supported! 
+- Character frequency analysis via a custom binary search tree.
+- Huffman tree implementation generated via priority queue.
+- Custom file format for Huffman-encoded data.
 
 ## How to install/run: 
 
@@ -21,16 +20,26 @@ An implementation of the Huffman coding algorithm for file compression in **C++*
 
 ## Example:
 
-I've also included a quick/basic test where the README of this project gets encoded and decoded
+I've also included a quick/basic test where this README.md gets encoded and decoded:
 
 ``` bash
+    git checkout debug
     make test
 ```
+You will see README.huff and README.md.test as outputs of this command, which are the compressed and decompressed files respectively. To remove these files, use the command:
 
-## Technical Implementation
-- **Data Structures:** BST for frequency counting, priority queue for Huffman tree construction  
-- **File Format:** Custom header with magic number `"HUFF"` + frequency table + compressed data  
-- **Bit Manipulation:** Manual bit packing/unpacking  
+```bash
+    make clean
+```
+
+## Technologies Used
+- **Make** for building
+- **C++** for algorithm implementation
+- **Python** and **bash** for testing
 
 ## Current Limitations
-- Since the frequency tables are developed locally, smaller files may actually end up getting expanded rather than decoded
+- Since the frequency tables are developed locally and the file format follows the "naive" approach according to the Wikipedia, smaller files may actually end up getting expanded rather than compressed.
+
+## Learn more about Huffman coding!
+
+Wikipedia link for Huffman coding [here](https://en.wikipedia.org/wiki/Huffman_coding).
