@@ -9,12 +9,16 @@ An implementation of the Huffman coding algorithm for file compression in **C++*
 - Huffman tree implementation generated via priority queue.
 - Custom file format for Huffman-encoded data.
 
+## Future/in-progress updates  
+- Canonical Huffman codes to reduce file header size.
+- Bitset implementation for storing binary codes.
+
 ## How to install/run: 
 
 ``` bash
     git clone https://github.com/blake125/huffman-project
     cd huffman-project 
-    make
+    make # (OPTIONAL) DEBUG=1
     ./bin/huffman -f [FILENAME] [-e(ncode) || -d(ecode)]
 ```
 
@@ -40,6 +44,6 @@ You will see README.huff and README.md.test as outputs of this command, which ar
 ## Current Limitations
 - Since the frequency tables are developed locally and the file format follows the "naive" approach according to the Wikipedia, smaller files may actually end up getting expanded rather than compressed.
 
-## Learn more about Huffman coding!
+## Sources 
 
-Wikipedia link for Huffman coding [here](https://en.wikipedia.org/wiki/Huffman_coding).
+Huffman coding on Wikipedia [here](https://en.wikipedia.org/wiki/Huffman_coding).
