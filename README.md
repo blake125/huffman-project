@@ -27,7 +27,6 @@ An implementation of the Huffman coding algorithm for file compression in **C++*
 I've also included a quick/basic test where this README.md gets encoded and decoded:
 
 ``` bash
-    git checkout debug
     make test
 ```
 You will see README.huff and README.md.test as outputs of this command, which are the compressed and decompressed files respectively. To remove these files, use the command:
