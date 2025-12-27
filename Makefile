@@ -3,7 +3,7 @@ SHELL := /bin/bash
 DIRS := bin/ bin/objs
 
 OBJS := bin/objs/HuffmanTree.o bin/objs/BinarySearchTree.o \
-	bin/objs/HuffFileMaker.o bin/objs/main.o
+	bin/objs/HuffmanCoder.o bin/objs/main.o  
 
 CC := g++
 
@@ -27,11 +27,11 @@ $(shell mkdir -p $(DIRS))
 huffman: ${OBJS} 
 	${CC} ${LFLAGS} ${OBJS} -o ./bin/huffman
 
-bin/objs/main.o: include/HuffFileMaker.h
+bin/objs/main.o: include/HuffmanCoder.h
 	${CC} ${CFLAGS} src/main.cpp -o bin/objs/main.o
 
-bin/objs/HuffFileMaker.o: include/HuffFileMaker.h src/HuffFileMaker.cpp include/HuffmanTree.h src/HuffmanTree.cpp include/BinarySearchTree.h src/BinarySearchTree.cpp
-	${CC} ${CFLAGS} src/HuffFileMaker.cpp -o bin/objs/HuffFileMaker.o
+bin/objs/HuffmanCoder.o: include/HuffmanCoder.h src/HuffmanCoder.cpp include/HuffmanTree.h src/HuffmanTree.cpp include/BinarySearchTree.h src/BinarySearchTree.cpp
+	${CC} ${CFLAGS} src/HuffmanCoder.cpp -o bin/objs/HuffmanCoder.o
 
 bin/objs/HuffmanTree.o: include/HuffmanTree.h src/HuffmanTree.cpp include/Node.h
 	${CC} ${CFLAGS} src/HuffmanTree.cpp -o bin/objs/HuffmanTree.o

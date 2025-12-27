@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstring>
 
-#include "../include/HuffFileMaker.h"
+#include "../include/HuffmanCoder.h"
 
 int usageError() {
 	std::cout << "Usage: huffman -f [FILENAME] -[e(encode), d(decode)]\n";
@@ -19,10 +19,13 @@ int main(int argc, char** argv) {
 		return usageError();	
 	}
 
+	std::string filename = argv[2];
+
+	HuffmanCoder coder;
 	if(strcmp(argv[3], "-e") == 0) {
-		makeEncodedFile(argv[2]);
+		coder.encode(filename.c_str());
 	} else if(strcmp(argv[3], "-d") == 0) {
-		makeDecodedFile(argv[2]);
+		coder.decode(filename.c_str());
 	} else {
 		return usageError();
 	}
