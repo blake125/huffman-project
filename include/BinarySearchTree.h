@@ -7,23 +7,28 @@
 #include <vector>
 
 class BinarySearchTree {
-	Node* m_root;
-	std::uint32_t m_count;
+	private:
+		//variables
+		Node* m_root;
+		std::uint32_t m_count;
+
+		//methods
+		int getCount(Node*);
+		void clearTree(Node*);
+		void insertHelper(Node*, std::uint8_t);
+		void fillInorder(Node*, std::vector<struct Data>&);
 
 	public:
-	BinarySearchTree();
-	~BinarySearchTree();
-	Node* getRoot();
-	int getCount();
-	int getCount(Node*);
+		//constructor
+		BinarySearchTree();
+		~BinarySearchTree();
 
-	void clearTree(Node*);
-	void insert(std::uint8_t);
-	void insertHelper(Node*, std::uint8_t);
-
-	std::vector<struct Data> inorder();
-	void fillInorder(Node*, std::vector<struct Data>&);
-	void printInorder();
+		//methods
+		Node* getRoot();
+		int getCount();
+		void insert(std::uint8_t);
+		std::vector<struct Data> inorder();
+		void printInorder();
 };
 
 #endif

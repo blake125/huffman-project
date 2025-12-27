@@ -2,10 +2,13 @@
 
 static const int BUFFER_SIZE = 4096;
 
-HuffmanCoder::HuffmanCoder() {
-	m_htree = nullptr;
-	m_bst = nullptr;
-}
+HuffmanCoder::HuffmanCoder(Arguments args) {
+	if(args.encodeFlag) {
+		encode(args.filename.c_str());
+	} else {
+		decode(args.filename.c_str());
+	}
+};
 
 void HuffmanCoder::encode(const char* fileName) {
 	std::ifstream infile(fileName, std::ios::binary);
@@ -15,15 +18,13 @@ void HuffmanCoder::encode(const char* fileName) {
 		return;
 	}
 	
-	m_bst = new BinarySearchTree();
-		
 	createFreqTree(infile);
 	
-	std::vector<struct Data> data = m_bst->inorder();	
+	std::vector<struct Data> data = m_bst.inorder();	
 	
 	std::sort(data.begin(), data.end());
-	
-	m_htree = new HuffmanTree(data);
+
+	m_htree.populateTree(data);
 	
 	std::string fileStr = fileName;
 	
@@ -33,33 +34,18 @@ void HuffmanCoder::encode(const char* fileName) {
 	std::ofstream outfile(fileStr + ".huff", std::ios::binary);
 	std::uint32_t bc = 0;
 
-	std::ofstream temp(fileStr + ".temp", std::ios::binary);
-	encodeFile(infile, temp, bc);
-	temp.close();
-
 	makeFileHeader(outfile);
+	encodeFile(infile, outfile, bc);
+
+	outfile.clear();
+	outfile.seekp(0, std::ios::beg);
+
+	outfile.write("HUFF", 4);
 	outfile.write(reinterpret_cast<const char*>(&bc), sizeof(bc));
 
-	std::ifstream writer(fileStr + ".temp", std::ios::binary);
-
-	char bytes[BUFFER_SIZE];
-	while(writer) {
-		writer.read(bytes, sizeof(bytes));
-		outfile.write(bytes, writer.gcount());
-	}
-
-	int status = remove((fileStr + ".temp").c_str());
-	if(status != 0) {
-		std::cout << "Error removing the temp file!\n";
-	} else {
-		std::cout << "Temp file successfully deleted.\n";
-	}
 
 	infile.close();
 	outfile.close();
-	writer.close();
-	delete m_htree;
-	delete m_bst;
 }
 
 void HuffmanCoder::encodeFile(std::ifstream& infile, std::ofstream& outfile, std::uint32_t &bc) {
@@ -70,7 +56,7 @@ void HuffmanCoder::encodeFile(std::ifstream& infile, std::ofstream& outfile, std
 	while(infile) {
 		infile.read(bytes, sizeof(bytes));
 		for(int j = 0; j < infile.gcount(); j++) {
-			std::string newRep = m_htree->retrievePath(bytes[j]);
+			std::string newRep = m_htree.retrievePath(bytes[j]);
 			bc += newRep.size();
 			for(int i = 0; i < (int)newRep.size(); i++) {
 				if(newRep.at(i) == '1') {
@@ -121,7 +107,7 @@ void HuffmanCoder::createFreqTree(std::ifstream& infile) {
 	while(infile) {
 		infile.read(bytes, sizeof(bytes));
 		for(int i = 0; i < infile.gcount(); i++) {
-			m_bst->insert(bytes[i]);
+			m_bst.insert(bytes[i]);
 		}
 	}
 }
@@ -139,15 +125,12 @@ void HuffmanCoder::decode(const char* fileName) {
 		std::cout << "Not a compressed file!" << std::endl;
 		return;
 	}
-	
-	m_bst = new BinarySearchTree();
-
-	std::uint32_t data[256] = {0};
-	infile.read(reinterpret_cast<char*>(data), sizeof(data));
 
 	std::uint32_t bc = 0;
 	infile.read(reinterpret_cast<char*>(&bc), sizeof(bc));
-
+	
+	std::uint32_t data[256] = {0};
+	infile.read(reinterpret_cast<char*>(data), sizeof(data));
 	
 	std::vector<struct Data> dataV;
 	for(int i = 0; i < 256; i++) {
@@ -158,7 +141,7 @@ void HuffmanCoder::decode(const char* fileName) {
 	}
 
 	std::sort(dataV.begin(), dataV.end());
-	m_htree = new HuffmanTree(dataV);
+	m_htree.populateTree(dataV);
 	
 	std::string decodedFileStr = fileName;
 	decodedFileStr = decodedFileStr.substr(0, decodedFileStr.size() - 5);
@@ -169,17 +152,18 @@ void HuffmanCoder::decode(const char* fileName) {
 
 	infile.close();
 	outfile.close();
-	delete m_bst;
-	delete m_htree;
 }
 
 void HuffmanCoder::makeFileHeader(std::ofstream& outfile) {
 	outfile.write("HUFF", 4);
+
+	std::uint32_t bc = 0;
+	outfile.write(reinterpret_cast<char*>(&bc), sizeof(bc));
 	
 	std::uint32_t frequencies[256] = {0};
 
-	std::vector<struct Data> data = m_bst->inorder();
-	for(int j = 0; j < m_bst->getCount(); j++) {
+	std::vector<struct Data> data = m_bst.inorder();
+	for(int j = 0; j < m_bst.getCount(); j++) {
 		frequencies[static_cast<std::uint8_t>(data.at(j).symbol)] = data.at(j).freq;
 	}
 
@@ -188,7 +172,7 @@ void HuffmanCoder::makeFileHeader(std::ofstream& outfile) {
 
 void HuffmanCoder::decodeFile(std::ifstream& infile, std::ofstream& outfile, std::uint32_t bit_count) {
 	char bytes[BUFFER_SIZE];
-	Node* walk = m_htree->getRoot();
+	Node* walk = m_htree.getRoot();
 	
 	std::uint32_t bc = 0;
 	while(infile) {
@@ -208,7 +192,7 @@ void HuffmanCoder::decodeFile(std::ifstream& infile, std::ofstream& outfile, std
 			    
 				if(walk->getLeft() == nullptr && walk->getRight() == nullptr) {
 					outfile.put(walk->getData().symbol);
-					walk = m_htree->getRoot();
+					walk = m_htree.getRoot();
 				}
 
 				bc++;

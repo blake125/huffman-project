@@ -1,32 +1,45 @@
 #include <iostream>
 #include <cstring>
+#include <exception>
 
 #include "../include/HuffmanCoder.h"
 
-int usageError() {
-	std::cout << "Usage: huffman -f [FILENAME] -[e(encode), d(decode)]\n";
-	return 1;
+void usageError() {
+	std::cout << "Usage: huffman -f [FILENAME] -[e(encode), d(decode)]" << std::endl;
+	exit(1);
+}
+
+Arguments parse(int argc, char **argv) {
+	bool encodeFlag;
+	std::string filename = argv[2];
+	
+	if(argc != 4) {
+		usageError();
+	}
+
+	if(strcmp("-f", argv[1]) != 0) {
+		usageError();	
+	}
+	
+	if(strcmp("-d", argv[3]) == 0) {
+		encodeFlag = false;
+	} else if(strcmp("-e", argv[3]) == 0) {
+		encodeFlag = true;
+	} else {
+		usageError();
+	}
+
+	return { encodeFlag, filename };
 }
 
 int main(int argc, char** argv) {
-	if(argc != 4) {
-		return usageError();		
+	try {
+		Arguments args = parse(argc, argv);
+		HuffmanCoder coder(args);
+	} catch(std::exception &e) {
+		std::cout << e.what() << std::endl;
+		return 1;
 	}
 
-	if(strcmp(argv[1], "-f") != 0 
-			|| (strcmp(argv[3], "-e") != 0 
-			&& strcmp(argv[3], "-d") != 0)) {
-		return usageError();	
-	}
-
-	std::string filename = argv[2];
-
-	HuffmanCoder coder;
-	if(strcmp(argv[3], "-e") == 0) {
-		coder.encode(filename.c_str());
-	} else if(strcmp(argv[3], "-d") == 0) {
-		coder.decode(filename.c_str());
-	} else {
-		return usageError();
-	}
+	return 0;
 }

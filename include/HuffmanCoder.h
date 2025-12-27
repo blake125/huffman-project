@@ -10,11 +10,16 @@
 #include "HuffmanTree.h"
 #include "Node.h"
 
+typedef struct {
+	bool encodeFlag;
+	std::string filename;
+} Arguments;
+
 class HuffmanCoder {
 	private:
 		//variables
-		BinarySearchTree *m_bst;
-		HuffmanTree *m_htree;
+		BinarySearchTree m_bst;
+		HuffmanTree m_htree;
 
 		//methods
 		void encodeFile(std::ifstream&, std::ofstream&, std::uint32_t&);
@@ -24,7 +29,7 @@ class HuffmanCoder {
 
 	public:
 		//constructor
-		HuffmanCoder();
+		HuffmanCoder(Arguments);
 
 		//methods
 		void encode(const char*);

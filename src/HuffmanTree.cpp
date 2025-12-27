@@ -1,6 +1,8 @@
 #include "../include/HuffmanTree.h"
 
-HuffmanTree::HuffmanTree(std::vector<Data> data) {
+HuffmanTree::HuffmanTree() = default;
+
+void HuffmanTree::populateTree(std::vector<Data> &data) {
 	std::vector<Node*> list;
 
 	for(int i = 0; i < (int)data.size(); i++) {
