@@ -21,9 +21,8 @@ class HuffmanTree {
 		//methods
 		void clearTree(Node*);
 		bool getPath(Node*, std::vector<char>&, std::uint8_t, char);
-		void populate_map(Node*);
+		void populateMap(Node*);
 		std::string findPath(std::uint8_t);
-	
 	public:
 		//constructor
 		HuffmanTree();

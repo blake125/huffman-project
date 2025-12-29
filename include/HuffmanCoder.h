@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cstdio>
 
-#include "BinarySearchTree.h"
+#include "FrequencyAnalyzer.h"
 #include "HuffmanTree.h"
 #include "Node.h"
 
@@ -18,7 +18,7 @@ typedef struct {
 class HuffmanCoder {
 	private:
 		//variables
-		BinarySearchTree m_bst;
+		FrequencyAnalyzer m_freq;
 		HuffmanTree m_htree;
 
 		//methods
@@ -29,11 +29,11 @@ class HuffmanCoder {
 
 	public:
 		//constructor
-		HuffmanCoder(Arguments);
+		HuffmanCoder();
 
 		//methods
-		void encode(const char*);
-		void decode(const char*);
+		void encode(std::string);
+		void decode(std::string);
 };
 
 #endif

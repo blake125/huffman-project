@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 DIRS := bin/ bin/objs
 
-OBJS := bin/objs/HuffmanTree.o bin/objs/BinarySearchTree.o \
+OBJS := bin/objs/HuffmanTree.o bin/objs/FrequencyAnalyzer.o \
 	bin/objs/HuffmanCoder.o bin/objs/main.o  
 
 CC := g++
@@ -30,14 +30,14 @@ huffman: ${OBJS}
 bin/objs/main.o: include/HuffmanCoder.h
 	${CC} ${CFLAGS} src/main.cpp -o bin/objs/main.o
 
-bin/objs/HuffmanCoder.o: include/HuffmanCoder.h src/HuffmanCoder.cpp include/HuffmanTree.h src/HuffmanTree.cpp include/BinarySearchTree.h src/BinarySearchTree.cpp
+bin/objs/HuffmanCoder.o: include/HuffmanCoder.h src/HuffmanCoder.cpp include/HuffmanTree.h src/HuffmanTree.cpp include/FrequencyAnalyzer.h src/FrequencyAnalyzer.cpp
 	${CC} ${CFLAGS} src/HuffmanCoder.cpp -o bin/objs/HuffmanCoder.o
 
 bin/objs/HuffmanTree.o: include/HuffmanTree.h src/HuffmanTree.cpp include/Node.h
 	${CC} ${CFLAGS} src/HuffmanTree.cpp -o bin/objs/HuffmanTree.o
 
-bin/objs/BinarySearchTree.o: include/BinarySearchTree.h src/BinarySearchTree.cpp include/Node.h 
-	${CC} ${CFLAGS} src/BinarySearchTree.cpp -o bin/objs/BinarySearchTree.o
+bin/objs/FrequencyAnalyzer.o: include/FrequencyAnalyzer.h src/FrequencyAnalyzer.cpp include/Node.h 
+	${CC} ${CFLAGS} src/FrequencyAnalyzer.cpp -o bin/objs/FrequencyAnalyzer.o
 
 clean:
 	-rm bin/huffman bin/objs/*.o *.huff *.test 

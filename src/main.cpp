@@ -35,11 +35,17 @@ Arguments parse(int argc, char **argv) {
 int main(int argc, char** argv) {
 	try {
 		Arguments args = parse(argc, argv);
-		HuffmanCoder coder(args);
+		HuffmanCoder coder;
+		if(args.encodeFlag) {
+			coder.encode(args.filename.c_str());
+		} else {
+			coder.decode(args.filename.c_str());
+		}
 	} catch(std::exception &e) {
 		std::cout << e.what() << std::endl;
 		return 1;
 	}
+
 
 	return 0;
 }

@@ -39,6 +39,8 @@ class Node {
 	inline void setLeft(Node* node){ m_left = node; }
 	inline void setRight(Node* node){ m_right = node; }
 	inline void incrementFreq(){ m_data.freq++; }
+
+	inline bool isLeaf() { return (m_left == nullptr && m_right == nullptr); }
 };
 
 class CompareNodePtrs {

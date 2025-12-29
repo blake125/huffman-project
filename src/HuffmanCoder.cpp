@@ -2,15 +2,9 @@
 
 static const int BUFFER_SIZE = 4096;
 
-HuffmanCoder::HuffmanCoder(Arguments args) {
-	if(args.encodeFlag) {
-		encode(args.filename.c_str());
-	} else {
-		decode(args.filename.c_str());
-	}
-};
+HuffmanCoder::HuffmanCoder() = default;
 
-void HuffmanCoder::encode(const char* fileName) {
+void HuffmanCoder::encode(std::string fileName) {
 	std::ifstream infile(fileName, std::ios::binary);
 
 	if(!infile.is_open()) {
@@ -20,18 +14,14 @@ void HuffmanCoder::encode(const char* fileName) {
 	
 	createFreqTree(infile);
 	
-	std::vector<struct Data> data = m_bst.inorder();	
+	std::vector<struct Data> data = m_freq.getMap();	
 	
-	std::sort(data.begin(), data.end());
-
 	m_htree.populateTree(data);
-	
-	std::string fileStr = fileName;
 	
 	infile.clear();
 	infile.seekg(0, std::ios::beg);
 	
-	std::ofstream outfile(fileStr + ".huff", std::ios::binary);
+	std::ofstream outfile(fileName + ".huff", std::ios::binary);
 	std::uint32_t bc = 0;
 
 	makeFileHeader(outfile);
@@ -40,9 +30,10 @@ void HuffmanCoder::encode(const char* fileName) {
 	outfile.clear();
 	outfile.seekp(0, std::ios::beg);
 
+	//Now that I know the bitcount of the encoded file
+	//I can overwrite the placeholder value I had there.
 	outfile.write("HUFF", 4);
 	outfile.write(reinterpret_cast<const char*>(&bc), sizeof(bc));
-
 
 	infile.close();
 	outfile.close();
@@ -106,13 +97,11 @@ void HuffmanCoder::createFreqTree(std::ifstream& infile) {
 	char bytes[BUFFER_SIZE];
 	while(infile) {
 		infile.read(bytes, sizeof(bytes));
-		for(int i = 0; i < infile.gcount(); i++) {
-			m_bst.insert(bytes[i]);
-		}
+		m_freq.add(reinterpret_cast<const std::uint8_t*>(bytes), infile.gcount());
 	}
 }
 
-void HuffmanCoder::decode(const char* fileName) {
+void HuffmanCoder::decode(std::string fileName) {
 	std::ifstream infile(fileName, std::ios::binary);
 	if(!infile.is_open()) {
 		std::cout << "File doesn't exist!" << std::endl;
@@ -143,11 +132,7 @@ void HuffmanCoder::decode(const char* fileName) {
 	std::sort(dataV.begin(), dataV.end());
 	m_htree.populateTree(dataV);
 	
-	std::string decodedFileStr = fileName;
-	decodedFileStr = decodedFileStr.substr(0, decodedFileStr.size() - 5);
-	decodedFileStr += ".test";
-
-	std::ofstream outfile(decodedFileStr, std::ios::binary);
+	std::ofstream outfile(fileName.substr(0, fileName.size() - 5) + ".test", std::ios::binary);
 	decodeFile(infile, outfile, bc);
 
 	infile.close();
@@ -157,13 +142,15 @@ void HuffmanCoder::decode(const char* fileName) {
 void HuffmanCoder::makeFileHeader(std::ofstream& outfile) {
 	outfile.write("HUFF", 4);
 
+	//since I don't know the value of bitcount until the file is encoded
+	//we are putting a placeholder to be overwritten later.
 	std::uint32_t bc = 0;
 	outfile.write(reinterpret_cast<char*>(&bc), sizeof(bc));
 	
 	std::uint32_t frequencies[256] = {0};
 
-	std::vector<struct Data> data = m_bst.inorder();
-	for(int j = 0; j < m_bst.getCount(); j++) {
+	std::vector<struct Data> data = m_freq.getMap();
+	for(int j = 0; j < data.size(); j++) {
 		frequencies[static_cast<std::uint8_t>(data.at(j).symbol)] = data.at(j).freq;
 	}
 
@@ -174,12 +161,11 @@ void HuffmanCoder::decodeFile(std::ifstream& infile, std::ofstream& outfile, std
 	char bytes[BUFFER_SIZE];
 	Node* walk = m_htree.getRoot();
 	
-	std::uint32_t bc = 0;
 	while(infile) {
 		infile.read(bytes, sizeof(bytes));
 		for(int j = 0; j < infile.gcount(); j++) {
 			for(int i = 0; i < 8; i++) {
-				if(bit_count == bc) {
+				if(bit_count == 0) {
 					return;
 				}
 				int bit = (bytes[j] & (1 << (7 - i))) != 0 ? 1 : 0;
@@ -190,12 +176,12 @@ void HuffmanCoder::decodeFile(std::ifstream& infile, std::ofstream& outfile, std
 					walk = walk->getRight();
 				}
 			    
-				if(walk->getLeft() == nullptr && walk->getRight() == nullptr) {
+				if(walk->isLeaf()) {
 					outfile.put(walk->getData().symbol);
 					walk = m_htree.getRoot();
 				}
 
-				bc++;
+				bit_count--;
 			}
 		}
 

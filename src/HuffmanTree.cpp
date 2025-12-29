@@ -26,21 +26,24 @@ void HuffmanTree::populateTree(std::vector<Data> &data) {
 	}
 
 	m_root = list.at(0);
-	populate_map(getRoot());
+
+	//populates a map with the list of
+	//paths so lookup is easier when encoding
+	populateMap(m_root);
 }
 
-void HuffmanTree::populate_map(Node* subroot) {
+void HuffmanTree::populateMap(Node* subroot) {
 	if(subroot == nullptr) {
 		return;
 	}
 
-	if(subroot->getLeft() == nullptr && subroot->getRight() == nullptr) {
+	if(subroot->isLeaf()) {
 		std::uint8_t data = subroot->getData().symbol;
 		symbol_map[data] = findPath(data); 
 	}
 
-	populate_map(subroot->getLeft());
-	populate_map(subroot->getRight());
+	populateMap(subroot->getLeft());
+	populateMap(subroot->getRight());
 }
 
 HuffmanTree::~HuffmanTree() {
@@ -88,8 +91,7 @@ bool HuffmanTree::getPath(Node* subroot, std::vector<char>& path, std::uint8_t t
 	}
 
 	if(subroot->getData().symbol == target 
-			&& subroot->getLeft() == nullptr 
-			&& subroot->getRight() == nullptr) {
+			&& subroot->isLeaf()) {
 		return true;
 	}	
 

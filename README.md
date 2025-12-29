@@ -13,13 +13,18 @@ An implementation of the Huffman coding algorithm for file compression in **C++*
 - Canonical Huffman codes to reduce file header size.
 - Bitset implementation for storing binary codes.
 
-## How to install/run: 
+## Installation instructions: 
 
 ``` bash
     git clone https://github.com/blake125/huffman-project
     cd huffman-project 
     make # (OPTIONAL) DEBUG=1
-    ./bin/huffman -f [FILENAME] [-e(ncode) || -d(ecode)]
+```
+
+## Usage instructions
+From the root directory, the command is structured as follows:
+```
+    ./bin/huffman -f [FILENAME] -[e (for encoding) | d (for decoding) ]
 ```
 
 ## Example:
@@ -29,11 +34,12 @@ I've also included a quick/basic test where this README.md gets encoded and deco
 ``` bash
     make test
 ```
-You will see README.huff and README.md.test as outputs of this command, which are the compressed and decompressed files respectively. To remove these files, use the command:
+The generated files README.txt.huff and README.md.test are the encoded and decoded files, respectively.
 
-```bash
-    make clean
-```
+## Extra Information
+
+To avoid file loss, newly decoded files are written to a new file with the name "[ORIGINAL FILENAME].test".
+The "-d" flag requires that [FILENAME] has a ".huff" extension.
 
 ## Technologies Used
 - **Make** for building
