@@ -1,10 +1,10 @@
 #include "../include/HuffmanCoder.h"
 
-static const int BUFFER_SIZE = 4096;
+static constexpr int BUFFER_SIZE = 4096;
 
 HuffmanCoder::HuffmanCoder() = default;
 
-void HuffmanCoder::encode(std::string fileName) {
+void HuffmanCoder::encode(const std::string &fileName) {
 	std::ifstream infile(fileName, std::ios::binary);
 
 	if(!infile.is_open()) {
@@ -14,7 +14,7 @@ void HuffmanCoder::encode(std::string fileName) {
 	
 	createFreqTree(infile);
 	
-	std::vector<struct Data> data = m_freq.getMap();	
+	std::vector<Data> data = m_freq.getFrequencies();
 	
 	m_htree.populateTree(data);
 	
@@ -49,8 +49,8 @@ void HuffmanCoder::encodeFile(std::ifstream& infile, std::ofstream& outfile, std
 		for(int j = 0; j < infile.gcount(); j++) {
 			std::string newRep = m_htree.retrievePath(bytes[j]);
 			bc += newRep.size();
-			for(int i = 0; i < (int)newRep.size(); i++) {
-				if(newRep.at(i) == '1') {
+			for(char i : newRep) {
+				if(i == '1') {
 					bitstream.push_back(1);
 				} else {
 					bitstream.push_back(0);
@@ -73,8 +73,9 @@ void HuffmanCoder::encodeFile(std::ifstream& infile, std::ofstream& outfile, std
 		}
 	}
 
-	if(bitstream.size() != 0) {	
-		int remaining = (8 - bitstream.size());
+	if(!bitstream.empty()) {
+		int remaining;
+		remaining = (8 - bitstream.size());
 
 		for(int j = 0; j < remaining; j++) {
 			bitstream.push_back(0);
@@ -101,27 +102,27 @@ void HuffmanCoder::createFreqTree(std::ifstream& infile) {
 	}
 }
 
-void HuffmanCoder::decode(std::string fileName) {
+void HuffmanCoder::decode(const std::string& fileName) {
 	std::ifstream infile(fileName, std::ios::binary);
 	if(!infile.is_open()) {
 		std::cout << "File doesn't exist!" << std::endl;
 		return;
 	}
 	
-	char magicNumber[5];
+	char magicNumber[5] = {0}; // Initialize all to 0
 	infile.read(magicNumber, 4);
-	if(strcmp(magicNumber, "HUFF") != 0) {
-		std::cout << "Not a compressed file!" << std::endl;
+	if(std::string(magicNumber) != "HUFF") { // Safer comparison
+		std::cout << "Not a HUFF file?";
 		return;
 	}
 
 	std::uint32_t bc = 0;
 	infile.read(reinterpret_cast<char*>(&bc), sizeof(bc));
 	
-	std::uint32_t data[256] = {0};
+	std::uint32_t data[256] = {};
 	infile.read(reinterpret_cast<char*>(data), sizeof(data));
 	
-	std::vector<struct Data> dataV;
+	std::vector<Data> dataV;
 	for(int i = 0; i < 256; i++) {
 		if(data[i] != 0) {
 			Data charData(data[i], (char)i);
@@ -139,7 +140,7 @@ void HuffmanCoder::decode(std::string fileName) {
 	outfile.close();
 }
 
-void HuffmanCoder::makeFileHeader(std::ofstream& outfile) {
+void HuffmanCoder::makeFileHeader(std::ofstream& outfile) const {
 	outfile.write("HUFF", 4);
 
 	//since I don't know the value of bitcount until the file is encoded
@@ -147,11 +148,11 @@ void HuffmanCoder::makeFileHeader(std::ofstream& outfile) {
 	std::uint32_t bc = 0;
 	outfile.write(reinterpret_cast<char*>(&bc), sizeof(bc));
 	
-	std::uint32_t frequencies[256] = {0};
+	std::uint32_t frequencies[256] = {};
 
-	std::vector<struct Data> data = m_freq.getMap();
-	for(int j = 0; j < data.size(); j++) {
-		frequencies[static_cast<std::uint8_t>(data.at(j).symbol)] = data.at(j).freq;
+	const std::vector<Data> data = m_freq.getFrequencies();
+	for(auto & j : data) {
+		frequencies[static_cast<std::uint8_t>(j.symbol)] = j.freq;
 	}
 
 	outfile.write(reinterpret_cast<const char*>(frequencies), sizeof(frequencies));
@@ -168,9 +169,8 @@ void HuffmanCoder::decodeFile(std::ifstream& infile, std::ofstream& outfile, std
 				if(bit_count == 0) {
 					return;
 				}
-				int bit = (bytes[j] & (1 << (7 - i))) != 0 ? 1 : 0;
-			    
-				if(bit == 0) {
+
+				if(int bit = (bytes[j] & (1 << (7 - i))) != 0 ? 1 : 0; bit == 0) {
 					walk = walk->getLeft();
 				} else { 
 					walk = walk->getRight();

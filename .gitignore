@@ -1,2 +1,6 @@
-tests/
+#build directory
+build/
+
+#ide settings
+.idea/
 

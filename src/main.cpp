@@ -1,6 +1,6 @@
-#include <iostream>
 #include <cstring>
 #include <exception>
+#include <iostream>
 
 #include "../include/HuffmanCoder.h"
 
@@ -10,8 +10,8 @@ void usageError() {
 }
 
 Arguments parse(int argc, char **argv) {
-	bool encodeFlag;
-	std::string filename = argv[2];
+	bool encodeFlag = false;
+	const std::string filename = argv[2];
 	
 	if(argc != 4) {
 		usageError();
@@ -32,14 +32,14 @@ Arguments parse(int argc, char **argv) {
 	return { encodeFlag, filename };
 }
 
-int main(int argc, char** argv) {
+int main(const int argc, char** argv) {
 	try {
-		Arguments args = parse(argc, argv);
+		const Arguments args = parse(argc, argv);
 		HuffmanCoder coder;
 		if(args.encodeFlag) {
-			coder.encode(args.filename.c_str());
+			coder.encode(args.filename);
 		} else {
-			coder.decode(args.filename.c_str());
+			coder.decode(args.filename);
 		}
 	} catch(std::exception &e) {
 		std::cout << e.what() << std::endl;

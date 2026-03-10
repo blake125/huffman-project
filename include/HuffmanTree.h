@@ -15,11 +15,11 @@ class HuffmanTree {
 	private:
 		//variables
 		Node* m_root;
-		std::uint8_t m_count;	
+		std::uint8_t m_count;
 		std::unordered_map<std::uint8_t, std::string> symbol_map;
 	
 		//methods
-		void clearTree(Node*);
+		static void clearTree(Node*);
 		bool getPath(Node*, std::vector<char>&, std::uint8_t, char);
 		void populateMap(Node*);
 		std::string findPath(std::uint8_t);
@@ -29,8 +29,8 @@ class HuffmanTree {
 		~HuffmanTree();
 
 		//methods
-		void populateTree(std::vector<struct Data>&);
-		Node* getRoot();
+		void populateTree(const std::vector<struct Data>&);
+		Node* getRoot() const;
 		std::string retrievePath(std::uint8_t);
 };
 

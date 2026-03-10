@@ -4,17 +4,17 @@ FrequencyAnalyzer::FrequencyAnalyzer() = default;
 
 void FrequencyAnalyzer::add(const std::uint8_t* buffer, const int size) {
 	for(int i = 0; i < size; i++) {
-		++m_freqMap[buffer[i]];
+		++m_frequencies[buffer[i]];
 	}
 }
 
-std::vector<Data> FrequencyAnalyzer::getMap() {
+std::vector<Data> FrequencyAnalyzer::getFrequencies() const {
 	std::vector<Data> data;
-	for(int i = 0; i < (std::uint8_t)255; i++) {
-		if(m_freqMap.count(i) != 0) {
+	for(int i = 0; i < (256); i++) {
+		if(m_frequencies[i] != 0) {
 			Data piece;
 			piece.symbol = i;
-			piece.freq = m_freqMap.at(i);
+			piece.freq = m_frequencies[i];
 			data.push_back(piece);
 		}
 	}

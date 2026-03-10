@@ -3,8 +3,6 @@
 
 #include <fstream>
 #include <cstring>
-#include <algorithm>
-#include <cstdio>
 
 #include "FrequencyAnalyzer.h"
 #include "HuffmanTree.h"
@@ -24,7 +22,7 @@ class HuffmanCoder {
 		//methods
 		void encodeFile(std::ifstream&, std::ofstream&, std::uint32_t&);
 		void createFreqTree(std::ifstream&);
-		void makeFileHeader(std::ofstream&);
+		void makeFileHeader(std::ofstream&) const;
 		void decodeFile(std::ifstream&, std::ofstream&, std::uint32_t);
 
 	public:
@@ -32,8 +30,8 @@ class HuffmanCoder {
 		HuffmanCoder();
 
 		//methods
-		void encode(std::string);
-		void decode(std::string);
+		void encode(const std::string&);
+		void decode(const std::string&);
 };
 
 #endif

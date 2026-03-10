@@ -1,7 +1,6 @@
 #ifndef FREQUENCY_ANALYZER_H
 #define FREQUENCY_ANALYZER_H
 
-#include <map>
 #include <vector>
 #include <algorithm>
 
@@ -9,12 +8,12 @@
 
 class FrequencyAnalyzer {
 	private:
-		std::map<std::uint8_t, std::uint32_t> m_freqMap;
+		std::uint32_t m_frequencies[256];
 	public:
 		FrequencyAnalyzer();
 
-		void add(const std::uint8_t*, const int);
-		std::vector<Data> getMap();
+		void add(const std::uint8_t*, int);
+		[[nodiscard]] std::vector<Data> getFrequencies() const;
 };
 
 #endif

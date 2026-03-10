@@ -2,22 +2,23 @@
 
 HuffmanTree::HuffmanTree() = default;
 
-void HuffmanTree::populateTree(std::vector<Data> &data) {
+void HuffmanTree::populateTree(const std::vector<Data> &data) {
 	std::vector<Node*> list;
 
-	for(int i = 0; i < (int)data.size(); i++) {
-		list.push_back(new Node(data.at(i).freq, data.at(i).symbol));
+	for(const auto i : data) {
+		list.push_back(new Node(i.freq, i.symbol));
 	}
 
-	while((int)list.size() != 1) {
-		Node* parent = new Node(list.at(0)->getData().freq + list.at(1)->getData().freq, '0');
+	while(static_cast<int>(list.size()) != 1) {
+		Node* parent;
+		parent = new Node(list.at(0)->getData().freq + list.at(1)->getData().freq, '0');
 		parent->setLeft(list.at(0));
 		parent->setRight(list.at(1));
 
 		list.erase(list.begin(), list.begin() + 2);
 
 		int index = 0;
-		while(index != (int)list.size() 
+		while(index != static_cast<int>(list.size())
 				&& list.at(index)->getData().freq < parent->getData().freq) {
 			index++;
 		}
@@ -38,7 +39,7 @@ void HuffmanTree::populateMap(Node* subroot) {
 	}
 
 	if(subroot->isLeaf()) {
-		std::uint8_t data = subroot->getData().symbol;
+		const std::uint8_t data = subroot->getData().symbol;
 		symbol_map[data] = findPath(data); 
 	}
 
@@ -66,22 +67,20 @@ std::string HuffmanTree::retrievePath(std::uint8_t data) {
 }
 
 std::string HuffmanTree::findPath(std::uint8_t data) {
-	std::vector<char> path;
-	std::string pathStr;
-
-	if(!getPath(m_root, path, data, -1)) {
+	if(std::vector<char> path; !getPath(m_root, path, data, -1)) {
 		std::cout << "Couldn't find " << data << std::endl;
 		return "";
 	} else {
-		for(int i = 0; i < (int)path.size(); i++) {
-			pathStr += path[i];
+		std::string pathStr;
+		for(const char i : path) {
+			pathStr += i;
 		}
 		
 		return pathStr;
 	}
 }
 
-bool HuffmanTree::getPath(Node* subroot, std::vector<char>& path, std::uint8_t target, char dir) {
+bool HuffmanTree::getPath(Node* subroot, std::vector<char>& path, const std::uint8_t target, const char dir) {
 	if(subroot == nullptr) {
 		return false;
 	}
@@ -104,6 +103,6 @@ bool HuffmanTree::getPath(Node* subroot, std::vector<char>& path, std::uint8_t t
 	return false;
 }
 
-Node* HuffmanTree::getRoot() {
+Node* HuffmanTree::getRoot() const {
 	return m_root;
 }
