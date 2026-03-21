@@ -1,5 +1,7 @@
 #include "../include/HuffmanTree.h"
 
+#include <sys/stat.h>
+
 HuffmanTree::HuffmanTree() = default;
 
 void HuffmanTree::populateTree(const std::vector<Data> &data) {
@@ -31,6 +33,7 @@ void HuffmanTree::populateTree(const std::vector<Data> &data) {
 	//populates a map with the list of
 	//paths so lookup is easier when encoding
 	populateMap(m_root);
+	canonizeCodes();
 }
 
 void HuffmanTree::populateMap(Node* subroot) {
@@ -105,4 +108,8 @@ bool HuffmanTree::getPath(Node* subroot, std::vector<char>& path, const std::uin
 
 Node* HuffmanTree::getRoot() const {
 	return m_root;
+}
+
+void HuffmanTree::canonizeCodes() {
+
 }

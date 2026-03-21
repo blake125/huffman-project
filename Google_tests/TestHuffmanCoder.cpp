@@ -3,6 +3,7 @@
 //
 
 #include <string>
+#include <cstdio>
 #include <fstream>
 #include <sstream>
 #include <gtest/gtest.h>
@@ -17,18 +18,36 @@ std::string readFile(const std::string& filename) {
     return ss.str();
 }
 
-TEST(HuffmanCoderTest, EncodeDecodeTest) {
+TEST(HuffmanCoderTests, EncodeDecodeTest) {
+    const std::string readme = "../Google_tests/test_files/readme.md";
     HuffmanCoder coder;
 
-    std::string readme = "../README.md";
-    std::string readmeHuff = readme + ".huff";
-    std::string outputFile = readme + ".test";
-
     coder.encode(readme);
-    coder.decode(readmeHuff);
+    coder.decode(readme + ".huff");
 
     const std::string expected = readFile(readme);
-    const std::string real = readFile(outputFile);
+    const std::string real = readFile(readme + ".test");
 
     ASSERT_EQ(expected, real);
+
+    const std::string readmeTest = readme + ".test";
+    std::remove(readmeTest.c_str());
+
+    const std::string readmeHuff = readme + ".huff";
+    std::remove(readmeHuff.c_str());
+}
+
+TEST(HuffmanCoderTests, EmptyFileTest) {
+    const std::string empty = "../Google_tests/test_files/empty.txt";
+    HuffmanCoder coder;
+    coder.encode(empty);
+    coder.decode(empty + ".huff");
+
+    ASSERT_EQ(readFile(empty), readFile(empty + ".test"));
+
+    const std::string emptyTest = empty + ".test";
+    std::remove(emptyTest.c_str());
+
+    const std::string emptyHuff = empty + ".huff";
+    std::remove(emptyHuff.c_str());
 }

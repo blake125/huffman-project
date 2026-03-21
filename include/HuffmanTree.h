@@ -8,6 +8,8 @@
 #include <sstream>
 #include <queue>
 #include <unordered_map>
+#include <utility>
+#include <algorithm>
 
 #include "Node.h"
 
@@ -23,6 +25,7 @@ class HuffmanTree {
 		bool getPath(Node*, std::vector<char>&, std::uint8_t, char);
 		void populateMap(Node*);
 		std::string findPath(std::uint8_t);
+		void canonizeCodes();
 	public:
 		//constructor
 		HuffmanTree();
