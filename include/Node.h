@@ -11,6 +11,8 @@ struct Data {
 	Data(std::uint32_t frequency, std::uint8_t character) : freq(frequency), symbol(character) {}
 	bool operator<(const Data& data) const { return freq < data.freq; }
 	bool operator>(const Data& data) const { return freq > data.freq; }
+
+	bool operator==(const Data& data) const { return (freq == data.freq) && (symbol == data.symbol); }
 };
 
 class Node {

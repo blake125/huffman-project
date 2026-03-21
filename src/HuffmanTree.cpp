@@ -2,16 +2,23 @@
 
 #include <sys/stat.h>
 
-HuffmanTree::HuffmanTree() = default;
+HuffmanTree::HuffmanTree() {
+	m_root = nullptr;
+	m_count = 0;
+};
 
 void HuffmanTree::populateTree(const std::vector<Data> &data) {
-	std::vector<Node*> list;
+	if (data.empty()) {
+		m_root = nullptr;
+		return;
+	}
 
+	std::vector<Node*> list;
 	for(const auto i : data) {
 		list.push_back(new Node(i.freq, i.symbol));
 	}
 
-	while(static_cast<int>(list.size()) != 1) {
+	while(static_cast<int>(list.size()) > 1) {
 		Node* parent;
 		parent = new Node(list.at(0)->getData().freq + list.at(1)->getData().freq, '0');
 		parent->setLeft(list.at(0));
@@ -26,6 +33,7 @@ void HuffmanTree::populateTree(const std::vector<Data> &data) {
 		}
 
 		list.insert(list.begin() + index, parent);
+		m_count++;
 	}
 
 	m_root = list.at(0);
@@ -112,4 +120,8 @@ Node* HuffmanTree::getRoot() const {
 
 void HuffmanTree::canonizeCodes() {
 
+}
+
+bool HuffmanTree::empty() const {
+	return m_root == nullptr;
 }

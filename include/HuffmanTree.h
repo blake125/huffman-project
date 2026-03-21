@@ -35,6 +35,7 @@ class HuffmanTree {
 		void populateTree(const std::vector<struct Data>&);
 		Node* getRoot() const;
 		std::string retrievePath(std::uint8_t);
+		bool empty() const;
 };
 
 #endif

@@ -12,6 +12,10 @@
 std::string readFile(const std::string& filename) {
     std::ifstream file(filename, std::ios::in | std::ios::binary);
 
+    if (!file.is_open()) {
+        return "";
+    }
+
     std::ostringstream ss;
     ss << file.rdbuf();
 
@@ -39,15 +43,20 @@ TEST(HuffmanCoderTests, EncodeDecodeTest) {
 
 TEST(HuffmanCoderTests, EmptyFileTest) {
     const std::string empty = "../Google_tests/test_files/empty.txt";
+
     HuffmanCoder coder;
     coder.encode(empty);
-    coder.decode(empty + ".huff");
-
-    ASSERT_EQ(readFile(empty), readFile(empty + ".test"));
-
-    const std::string emptyTest = empty + ".test";
-    std::remove(emptyTest.c_str());
 
     const std::string emptyHuff = empty + ".huff";
+    coder.decode(emptyHuff);
+
+    const std::string expected;
+
+    const std::string emptyTest = empty + ".test";
+    const std::string real = readFile(emptyTest);
+
+    ASSERT_EQ(real, expected);
+
+    std::remove(emptyTest.c_str());
     std::remove(emptyHuff.c_str());
 }

@@ -8,7 +8,7 @@
 
 class FrequencyAnalyzer {
 	private:
-		std::uint32_t m_frequencies[256];
+		std::uint32_t m_frequencies[256]{};
 	public:
 		FrequencyAnalyzer();
 

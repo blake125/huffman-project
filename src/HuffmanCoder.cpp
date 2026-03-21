@@ -17,6 +17,10 @@ void HuffmanCoder::encode(const std::string &fileName) {
 	std::vector<Data> data = m_freq.getFrequencies();
 	
 	m_htree.populateTree(data);
+
+	if (m_htree.empty()) {
+		return;
+	}
 	
 	infile.clear();
 	infile.seekg(0, std::ios::beg);
@@ -134,6 +138,11 @@ void HuffmanCoder::decode(const std::string& fileName) {
 	m_htree.populateTree(dataV);
 	
 	std::ofstream outfile(fileName.substr(0, fileName.size() - 5) + ".test", std::ios::binary);
+
+	if (m_htree.empty()) {
+		return;
+	}
+
 	decodeFile(infile, outfile, bc);
 
 	infile.close();
