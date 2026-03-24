@@ -20,3 +20,19 @@ TEST(FrequencyAnalyzerTests, BasicInsertionTest) {
 
     ASSERT_EQ(expected, v);
 }
+
+TEST(FrequencyAnalyzerTests, BasicIncrementTest) {
+    FrequencyAnalyzer f;
+
+    constexpr unsigned char data[] = { 'a', 'a', 'b', 'b' };
+
+    f.add(data, 4);
+
+    std::vector<Data> v = f.getFrequencies();
+
+    std::vector<Data> expected;
+    expected.emplace_back(2, 'a');
+    expected.emplace_back(2, 'b');
+
+    ASSERT_EQ(expected, v);
+}
