@@ -1,8 +1,8 @@
 #build directory
-build/
+build
 
-cmake-build-debug/
+cmake-build-debug
 
 #ide settings
-.idea/
+.idea
 
