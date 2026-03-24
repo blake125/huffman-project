@@ -15,3 +15,5 @@ target_link_libraries(Google_Tests_run PRIVATE
         GTest::gtest_main
         huffman_lib
 )
+
+gtest_discover_tests(Google_Tests_run)
