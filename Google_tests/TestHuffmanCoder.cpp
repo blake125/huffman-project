@@ -23,7 +23,7 @@ std::string readFile(const std::string& filename) {
 }
 
 TEST(HuffmanCoderTests, EncodeDecodeTest) {
-    const std::string readme = "../Google_tests/test_files/readme.md";
+    const std::string readme = "../../Google_tests/test_files/readme.md";
     HuffmanCoder coder;
 
     coder.encode(readme);
@@ -42,7 +42,7 @@ TEST(HuffmanCoderTests, EncodeDecodeTest) {
 }
 
 TEST(HuffmanCoderTests, EmptyFileTest) {
-    const std::string empty = "../Google_tests/test_files/empty.txt";
+    const std::string empty = "../../Google_tests/test_files/empty.txt";
 
     HuffmanCoder coder;
     coder.encode(empty);
