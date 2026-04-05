@@ -32,7 +32,7 @@ class HuffmanTree {
 		~HuffmanTree();
 
 		//methods
-		void populateTree(const std::vector<struct Data>&);
+		void populateTree(const std::vector<Data>&);
 		Node* getRoot() const;
 		std::string retrievePath(std::uint8_t);
 		bool empty() const;

@@ -78,8 +78,7 @@ void HuffmanCoder::encodeFile(std::ifstream& infile, std::ofstream& outfile, std
 	}
 
 	if(!bitstream.empty()) {
-		int remaining;
-		remaining = (8 - bitstream.size());
+		int remaining = (8 - bitstream.size());
 
 		for(int j = 0; j < remaining; j++) {
 			bitstream.push_back(0);
