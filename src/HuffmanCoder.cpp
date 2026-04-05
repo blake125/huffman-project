@@ -8,8 +8,7 @@ void HuffmanCoder::encode(const std::string &fileName) {
 	std::ifstream infile(fileName, std::ios::binary);
 
 	if(!infile.is_open()) {
-		std::cout << "File doesn't exist!\n";
-		return;
+		throw std::runtime_error("File doesn't exist!");
 	}
 	
 	createFreqTree(infile);
@@ -18,10 +17,6 @@ void HuffmanCoder::encode(const std::string &fileName) {
 	
 	m_htree.populateTree(data);
 
-	if (m_htree.empty()) {
-		return;
-	}
-	
 	infile.clear();
 	infile.seekg(0, std::ios::beg);
 	
@@ -108,13 +103,12 @@ void HuffmanCoder::createFreqTree(std::ifstream& infile) {
 void HuffmanCoder::decode(const std::string& fileName) {
 	std::ifstream infile(fileName, std::ios::binary);
 	if(!infile.is_open()) {
-		std::cout << "File doesn't exist!" << std::endl;
-		return;
+		throw std::runtime_error("File doesn't exist!");
 	}
-	
-	char magicNumber[5] = {0}; // Initialize all to 0
+
+	char magicNumber[5] = {};
 	infile.read(magicNumber, 4);
-	if(std::string(magicNumber) != "HUFF") { // Safer comparison
+	if(std::string(magicNumber) != "HUFF") {
 		std::cout << "Not a HUFF file?";
 		return;
 	}
@@ -128,7 +122,7 @@ void HuffmanCoder::decode(const std::string& fileName) {
 	std::vector<Data> dataV;
 	for(int i = 0; i < 256; i++) {
 		if(data[i] != 0) {
-			Data charData(data[i], (char)i);
+			Data charData(data[i], static_cast<char>(i));
 			dataV.push_back(charData);	
 		}
 	}
