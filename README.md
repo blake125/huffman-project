@@ -43,7 +43,7 @@ From the root directory, the command is structured as follows:
 ## If you want to run my test(s):
 From the build directory, run the following:
 ```
-    ./Google_tests/Google_Tests/run
+    ./Google_tests/Google_Tests_run
 ```
 
 ## Extra Information
