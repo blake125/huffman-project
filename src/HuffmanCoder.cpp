@@ -10,7 +10,7 @@ void HuffmanCoder::encode(const std::string &fileName) {
 	if(!infile.is_open()) {
 		throw std::runtime_error("File doesn't exist!");
 	}
-	
+
 	createFreqTree(infile);
 	
 	std::vector<Data> data = m_freq.getFrequencies();
@@ -68,7 +68,6 @@ void HuffmanCoder::encodeFile(std::ifstream& infile, std::ofstream& outfile, std
 
 				bitstream.erase(bitstream.begin(), bitstream.begin() + 8);
 			}
-
 		}
 	}
 
@@ -86,10 +85,8 @@ void HuffmanCoder::encodeFile(std::ifstream& infile, std::ofstream& outfile, std
 			}
 		}
 
-		
 		outfile.put(value);
 	}
-
 }
 
 void HuffmanCoder::createFreqTree(std::ifstream& infile) {
@@ -109,8 +106,7 @@ void HuffmanCoder::decode(const std::string& fileName) {
 	char magicNumber[5] = {};
 	infile.read(magicNumber, 4);
 	if(std::string(magicNumber) != "HUFF") {
-		std::cout << "Not a HUFF file?";
-		return;
+		throw std::runtime_error("Not a HUFF file, can't decode!");
 	}
 
 	std::uint32_t bc = 0;
@@ -186,6 +182,5 @@ void HuffmanCoder::decodeFile(std::ifstream& infile, std::ofstream& outfile, std
 				bit_count--;
 			}
 		}
-
-    	}
+	}
 }
