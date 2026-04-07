@@ -60,3 +60,15 @@ TEST(HuffmanCoderTests, EmptyFileTest) {
     std::remove(emptyTest.c_str());
     std::remove(emptyHuff.c_str());
 }
+
+TEST(HuffmanCoderTests, FileNotFoundTest) {
+    const std::string filename = "thisdoesnotexist.txt";
+
+    try {
+        HuffmanCoder coder;
+        coder.encode(filename);
+        FAIL();
+    } catch (std::runtime_error &e) {
+        ASSERT_EQ(e.what(), std::string("File doesn't exist!"));
+    }
+}
