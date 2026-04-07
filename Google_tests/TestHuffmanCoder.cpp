@@ -72,3 +72,15 @@ TEST(HuffmanCoderTests, FileNotFoundTest) {
         ASSERT_EQ(e.what(), std::string("File doesn't exist!"));
     }
 }
+
+TEST(HuffmanCoderTests, MalformedHuffFileTest) {
+    const std::string malformed = "../../Google_tests/test_files/readme.md";
+
+    try {
+        HuffmanCoder coder;
+        coder.decode(malformed);
+        FAIL();
+    } catch (std::runtime_error &e) {
+        ASSERT_EQ(e.what(), std::string("Not a HUFF file, can't decode!"));
+    }
+}
