@@ -1,7 +1,5 @@
 #include "../include/HuffmanTree.h"
 
-#include <sys/stat.h>
-
 HuffmanTree::HuffmanTree() {
 	m_root = nullptr;
 	m_count = 0;
