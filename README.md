@@ -10,7 +10,6 @@ An implementation of the Huffman coding algorithm for file compression in **C++*
 
 ## Features
 - File compression and decompression using Huffman coding.
-- All file types supported!
 - Huffman tree implementation generated via priority queue.
 - Custom file format for Huffman-encoded data.
 
@@ -37,19 +36,20 @@ An implementation of the Huffman coding algorithm for file compression in **C++*
 ## Usage instructions
 From the root directory, the command is structured as follows:
 ```
-    ./build/huffman -f [FILENAME] -[e (for encoding) | d (for decoding) ]
+    ./build/huffman -f <filename> -[ e | d ] #(e)ncode or (d)ecode
 ```
 
 ## If you want to run my test(s):
-From the build/Google_tests directory, run the following:
+From the root directory, run the following:
 ```
+    cd build/Google_tests
     ./Google_Tests_run
 ```
 
 ## Extra Information
 
-To avoid file loss, newly decoded files are written to a new file with the name "[ORIGINAL FILENAME].test".
-The "-d" flag requires that [FILENAME] has a ".huff" extension.
+- To avoid file loss, newly decoded files are written to a new file with the name "<filename>.test".
+- The "-d" flag requires that the file to be decoded has a ".huff" extension.
 
 ## Current Limitations
 - Since the frequency tables are developed locally and the file format follows the "naive" approach according to the Wikipedia, smaller files may actually end up getting expanded rather than compressed.
